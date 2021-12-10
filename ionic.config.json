@@ -1,0 +1,7 @@
+{
+  "name": "Enlighted",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "angular"
+}
