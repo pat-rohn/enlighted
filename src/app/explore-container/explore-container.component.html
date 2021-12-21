@@ -1,4 +1,9 @@
 <div id="container">
   <strong>{{ name }}</strong>
-  <p>Explore <a target="_blank" rel="noopener noreferrer" href="https://ionicframework.com/docs/components">UI Components</a></p>
+
+<ng-container *ngIf="led">
+  <p>tab container with led details</p>
+
+  <app-led-detail [ledStatus]=led></app-led-detail>
+</ng-container>
 </div>
