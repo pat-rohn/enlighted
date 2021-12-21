@@ -1,4 +1,6 @@
 import { Injectable } from '@angular/core';
+import { Observable, of } from 'rxjs';
+
 import { LEDStatus } from './ledstatus';
 
 @Injectable({
@@ -12,7 +14,7 @@ export class LedcontrolService {
     blue: 15,
     brightness: 35,
     mode: "on",
-    message: "Not Connected",
+    message: "Not Initialized",
   }
   constructor() { 
     this.ledStatus = this.defaultStatus;
@@ -23,9 +25,9 @@ export class LedcontrolService {
     this.ledStatus.message = "not connected";
   }
 
-
-  getLedStatus(): LEDStatus {
-    return this.ledStatus;
+  getLedStatus(): Observable<LEDStatus>  {
+    const l = of(this.defaultStatus);
+    return l;
   }
 
 }

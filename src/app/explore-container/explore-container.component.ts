@@ -12,14 +12,14 @@ export class ExploreContainerComponent implements OnInit {
   @Input() name: string;
   led?: LEDStatus;
 
-  constructor(private ledcontrolService: LedcontrolService) { }
+  constructor(private ledcontrolService: LedcontrolService) {
+  }
 
   ngOnInit() {
-    if (this.name == "LED") {
-      this.led = this.ledcontrolService.getLedStatus();
-    } else {
-      this.led = null;
-    }
+    this.ledcontrolService.getLedStatus()
+      .subscribe(ledstatus => this.led = ledstatus);
+
+    console.log("msg async: " + this.led.message);
 
   }
 
