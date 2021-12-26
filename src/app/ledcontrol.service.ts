@@ -31,6 +31,12 @@ export class LedcontrolService {
   }
 
   saveStatus(ledstatus: LEDStatus): Observable<any> {
+    console.log(`Save: ` + ledstatus.message + "mode: " + ledstatus.mode + " Colors:[" +
+      ledstatus.brightness +
+      "," + ledstatus.red +
+      "," + ledstatus.green +
+      "," + ledstatus.blue +
+      "]")
     console.log(`updated led: ` + ledstatus.message)
     return this.http.put(this.ledURL, ledstatus, this.httpOptions).pipe(
       tap(_ => console.log(`updated led` + ledstatus.message)),
