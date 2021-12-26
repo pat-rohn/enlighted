@@ -9,15 +9,37 @@ import { LEDStatus } from '../ledstatus';
   styleUrls: ['./led-detail.component.scss'],
 })
 export class LedDetailComponent implements OnInit {
- ledStatus?: LEDStatus;
+  ledStatus?: LEDStatus;
 
   constructor(private ledcontrolService: LedcontrolService) {
   }
 
   ngOnInit() {
     this.ledcontrolService.getLedStatus()
-    .subscribe(ledstatus => this.ledStatus = ledstatus);
+      .subscribe(ledstatus => this.ledStatus = ledstatus);
     console.log("msg: " + this.ledStatus.message);
   }
+  
+  formatSlider(value: number) {
+    return value + "%";
+  }
+
+  sliderBrightnessOnChange(value: number){
+    console.log("brightness: " + value);
+  }
+
+  sliderRedOnChange(value: number){
+    console.log("red: " + value);
+  }
+
+  sliderGreenOnChange(value: number){
+    console.log("green: " + value);
+  }
+
+  sliderBlueOnChange(value: number){
+    console.log("blue: " + value);
+  }
+
+
 
 }
