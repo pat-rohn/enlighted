@@ -1,5 +1,6 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 
+import { LedcontrolService } from '../ledcontrol.service';
 import { LEDStatus } from '../ledstatus';
 
 @Component({
@@ -8,12 +9,14 @@ import { LEDStatus } from '../ledstatus';
   styleUrls: ['./led-detail.component.scss'],
 })
 export class LedDetailComponent implements OnInit {
-  @Input() ledStatus?: LEDStatus;
+ ledStatus?: LEDStatus;
 
-  constructor() {
+  constructor(private ledcontrolService: LedcontrolService) {
   }
 
   ngOnInit() {
+    this.ledcontrolService.getLedStatus()
+    .subscribe(ledstatus => this.ledStatus = ledstatus);
     console.log("msg: " + this.ledStatus.message);
   }
 

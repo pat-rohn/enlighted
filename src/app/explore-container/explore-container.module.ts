@@ -9,7 +9,7 @@ import { ExploreContainerComponent } from './explore-container.component';
 import { LedDetailComponentModule } from '../led-detail/led-detail.module';
 
 @NgModule({
-  imports: [ CommonModule, FormsModule, IonicModule,LedDetailComponentModule],
+  imports: [ CommonModule, FormsModule, IonicModule, LedDetailComponentModule],
   declarations: [ExploreContainerComponent],
   exports: [ExploreContainerComponent]
 })

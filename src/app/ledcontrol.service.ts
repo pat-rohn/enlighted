@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { Observable, of } from 'rxjs';
 
 import { LEDStatus } from './ledstatus';
+import { LED_STATUS } from './ledstatus-mockup';
 
 @Injectable({
   providedIn: 'root'
@@ -21,12 +22,8 @@ export class LedcontrolService {
     console.log('led message ' + this.ledStatus.message);
   }
 
-  ngOnInit(): void {
-    this.ledStatus.message = "not connected";
-  }
-
   getLedStatus(): Observable<LEDStatus>  {
-    const l = of(this.defaultStatus);
+    const l = of(LED_STATUS);
     return l;
   }
 

@@ -1,7 +1,7 @@
 
 import { LEDStatus } from './ledstatus';
 
-const LED_STATUS: LEDStatus = {
+export const  LED_STATUS: LEDStatus = {
   red: 100,
   green: 70,
   blue: 15,
