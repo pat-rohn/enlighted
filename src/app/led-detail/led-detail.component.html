@@ -21,8 +21,8 @@
             </td>
             <td>
                 <mat-slider class="green-slider" #green (slideend)="sliderGreenOnChange(green.value)"
-                    (pointerup)="sliderGreenOnChange(green.value)" thumbLabel [displayWith]="formatSlider"
-                    min="1" max="100" step="1" value="{{ledStatus.green}}" vertical="true">
+                    (pointerup)="sliderGreenOnChange(green.value)" thumbLabel [displayWith]="formatSlider" min="1"
+                    max="100" step="1" value="{{ledStatus.green}}" vertical="true">
                 </mat-slider>
                 <hr>
                 <h2>{{ledStatus.green}}</h2>
@@ -38,12 +38,12 @@
         </tr>
     </table>
     <div>
-        
-    <button>Refresh</button>
-    <button>Off</button>
-        
+        <button (click)="onOff()" mat-button color="warn">Off</button>
     </div>
-
-
+    <hr>
 </ng-container>
-<hr>
+
+<div>
+    <button (click)="onRefresh()" mat-button color="primary">Refresh</button>
+    <hr>
+</div>
