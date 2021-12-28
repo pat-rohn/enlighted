@@ -4,8 +4,6 @@ import { RouteReuseStrategy } from '@angular/router';
 import { MatSliderModule } from '@angular/material/slider';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { HttpClientModule } from '@angular/common/http';
-import { HttpClientInMemoryWebApiModule } from 'angular-in-memory-web-api';
-import { InMemoryDataService } from './in-memory-data.service'; 
 import {MatButtonModule} from '@angular/material/button'; 
 
 import { IonicModule, IonicRouteStrategy } from '@ionic/angular';
@@ -25,9 +23,6 @@ import { LedDetailComponentModule } from './led-detail/led-detail.module';
     BrowserAnimationsModule,
     MatButtonModule,
     HttpClientModule,
-    HttpClientInMemoryWebApiModule.forRoot(
-      InMemoryDataService, { dataEncapsulation: false }
-    ),
   ],
   exports: [LedDetailComponentModule],
   providers: [{ provide: RouteReuseStrategy, useClass: IonicRouteStrategy }],

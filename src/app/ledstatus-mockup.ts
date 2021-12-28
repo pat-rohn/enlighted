@@ -1,14 +1,11 @@
 
-import { LEDStatus, LED_ON } from './ledstatus';
-
-
-
+import { LEDStatus, LED_OFF } from './ledstatus';
 
 export const LED_STATUS: LEDStatus = {
-  red: 100,
-  green: 70,
-  blue: 15,
+  red: 0,
+  green: 0,
+  blue: 0,
   brightness: 35,
-  mode: LED_ON,
+  mode: LED_OFF,
   message: "Not Connected",
 }

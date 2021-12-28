@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 
 import { LedcontrolService } from '../ledcontrol.service';
-import { LEDStatus, LEDMode, LabeledLedMode, LED_ON, LED_OFF, LED_PULSE, LED_CAMPFIRE, LED_COLORS, LED_AUTOCHANGE } from '../ledstatus';
+import { LEDStatus, LEDMode, LEDStatusJSON, LabeledLedMode, LED_ON, LED_OFF, LED_PULSE, LED_CAMPFIRE, LED_COLORS, LED_AUTOCHANGE } from '../ledstatus';
 
 
 @Component({
@@ -10,6 +10,7 @@ import { LEDStatus, LEDMode, LabeledLedMode, LED_ON, LED_OFF, LED_PULSE, LED_CAM
   styleUrls: ['./led-detail.component.scss'],
 })
 export class LedDetailComponent implements OnInit {
+  ledStatusJson?: LEDStatusJSON;
   ledStatus?: LEDStatus;
   ledModes: LabeledLedMode[] = [
     LED_ON,
@@ -26,7 +27,14 @@ export class LedDetailComponent implements OnInit {
 
   ngOnInit() {
     this.ledcontrolService.getLedStatus()
-      .subscribe(ledstatus => this.ledStatus = ledstatus);
+      .subscribe(
+        ledstatus => this.applyLEDStatus(ledstatus),
+        /*ledstatus => {
+          this.ngZone.run(() => {
+            this.ledStatus = ledstatus;
+          });
+        }*/
+      );
     if (this.ledStatus != null) {
       console.log("On init: " + this.ledStatus.message);
     }
@@ -70,39 +78,90 @@ export class LedDetailComponent implements OnInit {
 
   onSelectChange(event: any): void {
     console.log("ion change");
-    console.log(event.target.value);
+    var mode = event.target.value;
     if (this.ledStatus) {
       console.log("change mode");
-      this.ledStatus.mode = event.target.value.mode;
-      this.ledcontrolService.saveStatus(this.ledStatus)
-      .subscribe(() => console.log("save led detail component: select"));
+      this.ledStatus.mode = mode;
+      if (this.ledStatus.mode == null) {
+
+        //this.ledStatus.mode = {label: "on", id: (1)};
+        console.log("mode not defined: " + event.target.value.mode);
+      }
+      this.ledcontrolService.saveStatus(this.getJson())
+        .subscribe(() => console.log("save led detail component: select"));
     }
   }
 
   onSave(): void {
     if (this.ledStatus) {
-      this.ledcontrolService.saveStatus(this.ledStatus)
-      .subscribe(() => console.log("save led detail component: save"));
+      this.ledcontrolService.saveStatus(this.getJson())
+        .subscribe(() => console.log("save led detail component: save"));
     }
   }
 
   onOff(): void {
     if (this.ledStatus) {
       this.ledStatus.mode = LED_OFF;
-      this.ledcontrolService.saveStatus(this.ledStatus)
+      this.ledcontrolService.saveStatus(this.getJson())
         .subscribe(() => console.log("save led detail component: off"));
     }
   }
   onRefresh() {
     this.ledcontrolService.getLedStatus()
-      .subscribe(ledstatus => this.ledStatus = ledstatus);
+      .subscribe(
+        ledstatus => this.applyLEDStatus(ledstatus),
+         /*ledstatus => {
+          this.ngZone.run(() => {
+            this.ledStatus = ledstatus;
+          });
+        }*/
+        );
+    console.log("Refresh:" + this.ledStatus.message);
+    console.log("Brightness:" + this.ledStatus.brightness);
+    console.log("Mode:" + this.ledStatus.mode.label);
   }
 
   compareFn(e1: LabeledLedMode, e2: LabeledLedMode): boolean {
+    // TODO: FIX INIT
     //console.log("compareFn " + e1.mode + " : " + e2.mode + " / " + e1.label + ": " + e2.label);
-    console.log("e2 " + e2.id);
-    console.log("e1 " + e1.id);
+    //console.log("e2 " + e2.id);
+    //console.log("e1 " + e1.id);
     return e1 && e2 ? e1.id === e2.id : e1 === e2;
   }
 
+  applyLEDStatus(jsonStatus: LEDStatusJSON) {
+    var mode: LabeledLedMode = { label: "on", id: (jsonStatus.Mode) };
+    if (this.ledStatus == null) {
+      this.ledStatus = {
+        red: jsonStatus.Red,
+        green: jsonStatus.Green,
+        blue: jsonStatus.Blue,
+        brightness: jsonStatus.Brightness,
+        mode: null,
+        message: jsonStatus.Message
+      }
+    } else {
+
+      this.ledStatus.message = jsonStatus.Message;
+      this.ledStatus.brightness = jsonStatus.Brightness;
+      this.ledStatus.red = jsonStatus.Red;
+      this.ledStatus.green = jsonStatus.Green;
+      this.ledStatus.blue = jsonStatus.Blue;
+
+    }
+    this.ledStatus.mode = mode;
+    console.log("Mode:" + this.ledStatus.mode.id);
+  }
+
+  getJson(): LEDStatusJSON {
+    var jsonLED: LEDStatusJSON = {
+      Red: this.ledStatus.red,
+      Green: this.ledStatus.green,
+      Blue: this.ledStatus.blue,
+      Brightness: this.ledStatus.brightness,
+      Mode: this.ledStatus.mode.id,
+      Message: this.ledStatus.message,
+    }
+    return jsonLED;
+  }
 }

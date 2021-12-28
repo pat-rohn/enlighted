@@ -1,6 +1,6 @@
 
 export enum LEDMode {
-  on = 1,
+  on = 0,
   off,
   campfire,
   colorful,
@@ -14,6 +14,14 @@ export interface LabeledLedMode {
   id: LEDMode
 }
 
+export interface LEDStatusJSON {
+  Red: number;
+  Green: number;
+  Blue: number;
+  Brightness: number;
+  Mode: number;
+  Message: string;
+}
 
 export interface LEDStatus {
   red: number;

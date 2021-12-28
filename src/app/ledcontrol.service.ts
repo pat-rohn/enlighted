@@ -3,43 +3,48 @@ import { Observable, of } from 'rxjs';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { catchError, map, tap } from 'rxjs/operators';
 
-import { LEDStatus } from './ledstatus';
+import { LEDStatus, LEDStatusJSON } from './ledstatus';
 import { LED_STATUS } from './ledstatus-mockup';
+
+
 
 @Injectable({
   providedIn: 'root'
 })
 export class LedcontrolService {
   ledStatus: LEDStatus;
-  defaultStatus: LEDStatus = LED_STATUS;
 
-  private ledURL = 'api/ledstatus';
+  //private ledURL = "assets/ledstatus.json";
+  private ledGetURL = "http://192.168.1.142/api/get";
+  private ledApplyURL = "http://192.168.1.142/api/apply";
   httpOptions = {
-    headers: new HttpHeaders({ 'Content-Type': 'application/json' })
+    headers: new HttpHeaders({
+      'Content-Type': 'application/json'
+    })
   };
 
   constructor(private http: HttpClient) {
-    this.ledStatus = this.defaultStatus;
+    this.ledStatus = LED_STATUS;
     console.log('led message ' + this.ledStatus.message);
   }
-  getLedStatus(): Observable<LEDStatus> {
-    console.log('get led status from:' + this.ledURL);
-    return this.http.get<LEDStatus>(this.ledURL).pipe(
+
+  getLedStatus(): Observable<LEDStatusJSON> {
+    console.log('get led status from:' + this.ledGetURL);
+    return this.http.get<LEDStatusJSON>(this.ledGetURL).pipe(
       tap(_ => console.log('fetched led status')),
-      catchError(this.handleError<LEDStatus>('getLedStatus', null))
+      catchError(this.handleError<LEDStatusJSON>('getLedStatus', null))
     );
   }
 
-  saveStatus(ledstatus: LEDStatus): Observable<any> {
-    console.log(`Save: ` + ledstatus.message + "mode: " + ledstatus.mode + " Colors:[" +
-      ledstatus.brightness +
-      "," + ledstatus.red +
-      "," + ledstatus.green +
-      "," + ledstatus.blue +
+  saveStatus(ledstatus: LEDStatusJSON): Observable<any> {
+    console.log(`Save: ` + ledstatus.Message + "mode: " + ledstatus.Mode + " Colors:[" +
+      ledstatus.Brightness +
+      "," + ledstatus.Red +
+      "," + ledstatus.Green +
+      "," + ledstatus.Blue +
       "]")
-    console.log(`updated led: ` + ledstatus.message)
-    return this.http.put(this.ledURL, ledstatus, this.httpOptions).pipe(
-      tap(_ => console.log(`updated led` + ledstatus.message)),
+    return this.http.post(this.ledApplyURL, ledstatus, this.httpOptions).pipe(
+      tap(_ => console.log(`updated led` + ledstatus.Message)),
       catchError(this.handleError<any>('saveStatus'))
     );
   }
