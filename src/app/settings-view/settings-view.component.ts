@@ -8,9 +8,11 @@ import { LocalstorageService } from '../localstorage.service'
   styleUrls: ['./settings-view.component.scss'],
 })
 export class SettingsViewComponent implements OnInit {
-  settings?: Settings;
-  constructor(private localStorage: LocalstorageService) { }
   
+  settings?: Settings;
+
+  constructor(private localStorage: LocalstorageService) { }
+
   async ngOnInit() {
     console.log("init view comp");
     this.settings = await this.localStorage.getSettings();

@@ -8,6 +8,7 @@ import { MatButtonModule } from '@angular/material/button';
 
 import { LedDetailComponent } from './led-detail.component';
 
+
 @NgModule({
     imports: [CommonModule, FormsModule, IonicModule, MatSliderModule, MatButtonModule],
     declarations: [LedDetailComponent],

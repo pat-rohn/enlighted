@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 
 import { LedcontrolService } from '../ledcontrol.service';
 import { LEDStatus, LEDMode, LEDStatusJSON, LabeledLedMode, LED_ON, LED_OFF, LED_PULSE, LED_CAMPFIRE, LED_COLORS, LED_AUTOCHANGE } from '../ledstatus';
+import {Settings} from '../settings'
+import { LocalstorageService } from '../localstorage.service';
 
 
 @Component({
@@ -12,6 +14,8 @@ import { LEDStatus, LEDMode, LEDStatusJSON, LabeledLedMode, LED_ON, LED_OFF, LED
 export class LedDetailComponent implements OnInit {
   ledStatusJson?: LEDStatusJSON;
   ledStatus?: LEDStatus;
+  settings?: Settings;
+
   ledModes: LabeledLedMode[] = [
     LED_ON,
     LED_OFF,
@@ -21,11 +25,22 @@ export class LedDetailComponent implements OnInit {
     LED_PULSE,
   ];
 
-
-  constructor(private ledcontrolService: LedcontrolService) {
+  constructor(private ledcontrolService: LedcontrolService, private localStorage: LocalstorageService) {
   }
 
-  ngOnInit() {
+  async ngOnInit() {
+
+    this.settings = await this.localStorage.getSettings();
+    this.ledcontrolService.setIpAddress(this.settings.address);
+    this.ledcontrolService.getLedStatus()
+    .subscribe(
+      ledstatus => this.applyLEDStatus(ledstatus),
+      /*ledstatus => {
+        this.ngZone.run(() => {
+          this.ledStatus = ledstatus;
+        });
+      }*/
+    );
     this.ledcontrolService.getLedStatus()
       .subscribe(
         ledstatus => this.applyLEDStatus(ledstatus),
@@ -38,6 +53,7 @@ export class LedDetailComponent implements OnInit {
     if (this.ledStatus != null) {
       console.log("On init: " + this.ledStatus.message);
     }
+    
   }
 
   formatSlider(value: number) {
