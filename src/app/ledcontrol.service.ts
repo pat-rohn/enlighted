@@ -5,8 +5,7 @@ import { catchError, map, tap } from 'rxjs/operators';
 
 import { LEDStatus, LEDStatusJSON } from './ledstatus';
 import { DEFAULT_LED_STATUS } from './ledstatus-mockup';
-import { Settings } from './settings';
-import { LocalstorageService } from './localstorage.service';
+import { ToastController } from '@ionic/angular';
 
 
 @Injectable({
@@ -27,13 +26,13 @@ export class LedcontrolService {
     })
   };
 
-  constructor(private http: HttpClient, private localstorageService: LocalstorageService) {
+  constructor(private http: HttpClient, public toastController: ToastController) {
     this.ledStatus = DEFAULT_LED_STATUS;
     console.log('led message ' + this.ledStatus.message);
   }
 
-  public setIpAddress(address:string){
-   this.ipAddress = address;
+  public setIpAddress(address: string) {
+    this.ipAddress = address;
   }
 
   getLedStatus(): Observable<LEDStatusJSON> {
@@ -77,10 +76,17 @@ export class LedcontrolService {
 
       // TODO: better job of transforming error for user consumption
       console.log(`${operation} failed: ${error.message}`);
-
+      this.presentToast(`${operation} failed: ${error.message}`);
       // Let the app keep running by returning an empty result.
       return of(result as T);
     };
+  }
+  async presentToast(message: string) {
+    const toast = await this.toastController.create({
+      message: message,
+      duration: 2000
+    });
+    toast.present();
   }
 
 }
