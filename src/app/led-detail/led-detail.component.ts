@@ -110,12 +110,12 @@ export class LedDetailComponent implements OnInit {
     this.ledcontrolService.getLedStatus()
       .subscribe(
         ledstatus => this.applyLEDStatus(ledstatus),
-         /*ledstatus => {
-          this.ngZone.run(() => {
-            this.ledStatus = ledstatus;
-          });
-        }*/
-        );
+        /*ledstatus => {
+         this.ngZone.run(() => {
+           this.ledStatus = ledstatus;
+         });
+       }*/
+      );
     console.log("Refresh:" + this.ledStatus.message);
     console.log("Brightness:" + this.ledStatus.brightness);
     console.log("Mode:" + this.ledStatus.mode.label);

@@ -1,7 +1,7 @@
 
 import { LEDStatus, LED_OFF } from './ledstatus';
 
-export const LED_STATUS: LEDStatus = {
+export const DEFAULT_LED_STATUS: LEDStatus = {
   red: 0,
   green: 0,
   blue: 0,

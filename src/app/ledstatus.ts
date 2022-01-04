@@ -8,7 +8,6 @@ export enum LEDMode {
   pulse,
 }
 
-
 export interface LabeledLedMode {
   label: string;
   id: LEDMode

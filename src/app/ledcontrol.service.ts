@@ -4,8 +4,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { catchError, map, tap } from 'rxjs/operators';
 
 import { LEDStatus, LEDStatusJSON } from './ledstatus';
-import { LED_STATUS } from './ledstatus-mockup';
-
+import { DEFAULT_LED_STATUS } from './ledstatus-mockup';
 
 
 @Injectable({
@@ -14,9 +13,12 @@ import { LED_STATUS } from './ledstatus-mockup';
 export class LedcontrolService {
   ledStatus: LEDStatus;
 
-  //private ledURL = "assets/ledstatus.json";
+  /*
   private ledGetURL = "http://192.168.1.142/api/get";
   private ledApplyURL = "http://192.168.1.142/api/apply";
+  */
+  private ledGetURL = "assets/ledstatus.json";
+  private ledApplyURL = "assets/ledstatus.json";
   httpOptions = {
     headers: new HttpHeaders({
       'Content-Type': 'application/json'
@@ -24,7 +26,7 @@ export class LedcontrolService {
   };
 
   constructor(private http: HttpClient) {
-    this.ledStatus = LED_STATUS;
+    this.ledStatus = DEFAULT_LED_STATUS;
     console.log('led message ' + this.ledStatus.message);
   }
 

@@ -4,13 +4,15 @@ import { RouteReuseStrategy } from '@angular/router';
 import { MatSliderModule } from '@angular/material/slider';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { HttpClientModule } from '@angular/common/http';
-import {MatButtonModule} from '@angular/material/button'; 
+import { MatButtonModule } from '@angular/material/button';
 
 import { IonicModule, IonicRouteStrategy } from '@ionic/angular';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { LedDetailComponentModule } from './led-detail/led-detail.module';
+import { SettingsViewModule } from './settings-view/settings-view.module';
+import { FormsModule } from '@angular/forms';
 
 @NgModule({
   declarations: [AppComponent],
@@ -20,11 +22,13 @@ import { LedDetailComponentModule } from './led-detail/led-detail.module';
     AppRoutingModule,
     MatSliderModule,
     LedDetailComponentModule,
+    SettingsViewModule,
     BrowserAnimationsModule,
     MatButtonModule,
     HttpClientModule,
+    FormsModule
   ],
-  exports: [LedDetailComponentModule],
+  exports: [LedDetailComponentModule, SettingsViewModule],
   providers: [{ provide: RouteReuseStrategy, useClass: IonicRouteStrategy }],
   bootstrap: [AppComponent],
 })

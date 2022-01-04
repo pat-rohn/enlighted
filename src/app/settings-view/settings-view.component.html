@@ -1,0 +1,12 @@
+<div *ngIf="settings">
+    <ion-item>
+        <ion-label>IP Address</ion-label>
+        <ion-input type="text" ame="settings.address" ngDefaultControl [(ngModel)]="settings.address" text-right id="input" ></ion-input>
+      </ion-item>
+    
+    <br>
+    <ion-button color="primary" (click)="clickedCheckConnection()">Check Connection</ion-button>
+
+    <ion-button color="primary" (click)="clickedSave()">Save</ion-button>
+
+</div>
