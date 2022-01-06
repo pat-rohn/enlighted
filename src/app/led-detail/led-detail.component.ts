@@ -1,9 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 
-import { LedcontrolService } from '../ledcontrol.service';
+import { LedcontrolService } from '../services/ledcontrol.service';
 import { LEDStatus, LEDStatusJSON, LabeledLedMode, LED_ON, LED_OFF, LED_PULSE, LED_CAMPFIRE, LED_COLORS, LED_AUTOCHANGE, LEDMode } from '../ledstatus';
 import {Settings} from '../settings'
-import { LocalstorageService } from '../localstorage.service';
+import { LocalstorageService } from '../services/localstorage.service';
 
 
 @Component({
@@ -138,10 +138,6 @@ export class LedDetailComponent implements OnInit {
   }
 
   compareFn(e1: LabeledLedMode, e2: LabeledLedMode): boolean {
-    // TODO: FIX INIT
-    //console.log("compareFn " + e1.mode + " : " + e2.mode + " / " + e1.label + ": " + e2.label);
-    //console.log("e2 " + e2.id);
-    //console.log("e1 " + e1.id);
     return e1 && e2 ? e1.id === e2.id : e1 === e2;
   }
 

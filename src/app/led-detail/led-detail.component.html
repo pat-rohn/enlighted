@@ -38,7 +38,7 @@
         </tr>
     </table>
     <div>
-        <mat-form-field *ngIf="ledStatus" appearance="fill">
+        <mat-form-field appearance="fill">
             <mat-label>Mode</mat-label>
             <mat-select (selectionChange)="onSelectChange($event.value)" [(ngModel)]="ledStatus.mode" [compareWith]="compareFn">
                 <mat-option *ngFor="let mode of ledModes" [value]="mode">

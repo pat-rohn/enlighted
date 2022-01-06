@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Settings } from '../settings'
-import { LocalstorageService } from '../localstorage.service'
+import { LocalstorageService } from '../services/localstorage.service'
 
 @Component({
   selector: 'app-settings-view',
