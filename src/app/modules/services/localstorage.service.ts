@@ -2,25 +2,26 @@ import { Injectable } from '@angular/core';
 import { Storage } from '@capacitor/storage';
 import { Settings } from '../settings'
 import { DEFAULT_LED_STATUS } from '../ledstatus-mockup';
+import { LedcontrolService } from './ledcontrol.service'
 
 
 @Injectable({
   providedIn: 'root'
 })
 export class LocalstorageService {
-  
+
   settings: Settings = {
     ledstatus: DEFAULT_LED_STATUS,
     address: "192.168.4.1"
   };
 
-  constructor() { }
+  constructor(private ledControlService: LedcontrolService) { }
 
   async getSettings() {
 
     console.log("Get settings");
     console.log(JSON.stringify(this.settings));
-    const {value} = await Storage.get({ key: 'settings' });
+    const { value } = await Storage.get({ key: 'settings' });
     if (value != null) {
 
       console.log("Replace settings");
@@ -34,5 +35,6 @@ export class LocalstorageService {
   async setSettings(settings: Settings) {
     console.log("Store settings:" + JSON.stringify(this.settings));
     await Storage.set({ key: 'settings', value: JSON.stringify(settings) })
+    this.ledControlService.setIpAddress(this.settings.address);
   }
 }
