@@ -3,8 +3,8 @@ import { Observable, of } from 'rxjs';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { catchError, map, tap } from 'rxjs/operators';
 
-import { LEDStatus, LEDStatusJSON } from './ledstatus';
-import { DEFAULT_LED_STATUS } from './ledstatus-mockup';
+import { LEDStatus, LEDStatusJSON } from '../ledstatus';
+import { DEFAULT_LED_STATUS } from '../ledstatus-mockup';
 import { ToastController } from '@ionic/angular';
 
 

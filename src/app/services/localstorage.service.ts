@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Storage } from '@capacitor/storage';
-import { Settings } from './settings'
-import { DEFAULT_LED_STATUS } from './ledstatus-mockup';
+import { Settings } from '../settings'
+import { DEFAULT_LED_STATUS } from '../ledstatus-mockup';
 
 
 @Injectable({

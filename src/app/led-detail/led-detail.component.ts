@@ -1,9 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 
-import { LedcontrolService } from '../ledcontrol.service';
+import { LedcontrolService } from '../services/ledcontrol.service';
 import { LEDStatus, LEDStatusJSON, LabeledLedMode, LED_ON, LED_OFF, LED_PULSE, LED_CAMPFIRE, LED_COLORS, LED_AUTOCHANGE, LEDMode } from '../ledstatus';
 import {Settings} from '../settings'
-import { LocalstorageService } from '../localstorage.service';
+import { LocalstorageService } from '../services/localstorage.service';
 
 
 @Component({
