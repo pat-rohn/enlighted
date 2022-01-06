@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 
 import { LedcontrolService } from '../ledcontrol.service';
-import { LEDStatus, LEDStatusJSON, LabeledLedMode, LED_ON, LED_OFF, LED_PULSE, LED_CAMPFIRE, LED_COLORS, LED_AUTOCHANGE } from '../ledstatus';
+import { LEDStatus, LEDStatusJSON, LabeledLedMode, LED_ON, LED_OFF, LED_PULSE, LED_CAMPFIRE, LED_COLORS, LED_AUTOCHANGE, LEDMode } from '../ledstatus';
 import {Settings} from '../settings'
 import { LocalstorageService } from '../localstorage.service';
 
@@ -92,16 +92,16 @@ export class LedDetailComponent implements OnInit {
     }
   }
 
-  onSelectChange(event: any): void {
+  onSelectChange(value: LabeledLedMode): void {
     console.log("ion change");
-    var mode = event.target.value;
+    var mode = value;
     if (this.ledStatus) {
       console.log("change mode");
       this.ledStatus.mode = mode;
       if (this.ledStatus.mode == null) {
 
         //this.ledStatus.mode = {label: "on", id: (1)};
-        console.log("mode not defined: " + event.target.value.mode);
+        console.log("mode not defined: " + value);
       }
       this.ledcontrolService.saveStatus(this.getJson())
         .subscribe(() => console.log("save led detail component: select"));

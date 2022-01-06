@@ -5,6 +5,8 @@ import { MatSliderModule } from '@angular/material/slider';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { HttpClientModule } from '@angular/common/http';
 import { MatButtonModule } from '@angular/material/button';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import {MatSelectModule} from '@angular/material/select';
 
 import { IonicModule, IonicRouteStrategy } from '@ionic/angular';
 
@@ -26,7 +28,9 @@ import { FormsModule } from '@angular/forms';
     BrowserAnimationsModule,
     MatButtonModule,
     HttpClientModule,
-    FormsModule
+    FormsModule,
+    MatFormFieldModule,
+    MatSelectModule
   ],
   exports: [LedDetailComponentModule, SettingsViewModule],
   providers: [{ provide: RouteReuseStrategy, useClass: IonicRouteStrategy }],

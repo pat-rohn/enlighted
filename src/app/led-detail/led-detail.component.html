@@ -38,19 +38,15 @@
         </tr>
     </table>
     <div>
-        <ion-list>
-            <ion-item>
-                <ion-label>LED Mode</ion-label>
-                <!-- TODO: fix-->
-                <ion-select (ionChange)="onSelectChange($event)" [compareWith]="compareFn" key="{ledStatus.mode.id}"
-                    value="{ledStatus.mode.label}" required>
-                    <!--<ion-select (ionChange)="onSelectChange($event)" [compareWith]="compareFn" [(ngModel)]="ledStatus.mode" required> -->
-
-                    <ion-select-option *ngFor="let mode of ledModes" [value]="mode">{{mode.id}} {{mode.label}}
-                    </ion-select-option>
-                </ion-select>
-            </ion-item>
-        </ion-list>
+        <mat-form-field *ngIf="ledStatus" appearance="fill">
+            <mat-label>Mode</mat-label>
+            <mat-select (selectionChange)="onSelectChange($event.value)" [(ngModel)]="ledStatus.mode" [compareWith]="compareFn">
+                <mat-option *ngFor="let mode of ledModes" [value]="mode">
+                    {{mode.id}} {{mode.label}}
+                </mat-option>
+            </mat-select>
+        </mat-form-field>
+        <br>
         <button (click)="onOff()" mat-button color="warn">Off</button>
     </div>
     <hr>
