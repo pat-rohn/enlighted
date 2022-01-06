@@ -12,8 +12,8 @@ import { IonicModule, IonicRouteStrategy } from '@ionic/angular';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { LedDetailComponentModule } from './led-detail/led-detail.module';
-import { SettingsViewModule } from './settings-view/settings-view.module';
+import { LedDetailComponentModule } from './modules/led-detail/led-detail.module';
+import { SettingsViewModule } from './modules/settings-view/settings-view.module';
 import { FormsModule } from '@angular/forms';
 
 @NgModule({
