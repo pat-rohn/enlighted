@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 
 import { LedcontrolService } from '../services/ledcontrol.service';
 import { LEDStatus, LEDStatusJSON, LabeledLedMode, LED_ON, LED_OFF, LED_PULSE, LED_CAMPFIRE, LED_COLORS, LED_AUTOCHANGE, LEDMode } from '../ledstatus';
-import {Settings} from '../settings'
+import { Settings } from '../settings'
 import { LocalstorageService } from '../services/localstorage.service';
 
 
@@ -33,14 +33,14 @@ export class LedDetailComponent implements OnInit {
     this.settings = await this.localStorage.getSettings();
     this.ledcontrolService.setIpAddress(this.settings.address);
     this.ledcontrolService.getLedStatus()
-    .subscribe(
-      ledstatus => this.applyLEDStatus(ledstatus),
-      /*ledstatus => {
-        this.ngZone.run(() => {
-          this.ledStatus = ledstatus;
-        });
-      }*/
-    );
+      .subscribe(
+        ledstatus => this.applyLEDStatus(ledstatus),
+        /*ledstatus => {
+          this.ngZone.run(() => {
+            this.ledStatus = ledstatus;
+          });
+        }*/
+      );
     this.ledcontrolService.getLedStatus()
       .subscribe(
         ledstatus => this.applyLEDStatus(ledstatus),
@@ -53,7 +53,7 @@ export class LedDetailComponent implements OnInit {
     if (this.ledStatus != null) {
       console.log("On init: " + this.ledStatus.message);
     }
-    
+
   }
 
   formatSlider(value: number) {

@@ -15,14 +15,13 @@ export class LedcontrolService {
   ipAddress?: string;
   ledStatus: LEDStatus;
 
-  private ledGetURL = "/api/get";
-  private ledApplyURL = "/api/apply";
+  private ledURL = "/api/led";
 
   private useDummy: boolean = false;
 
   httpOptions = {
     headers: new HttpHeaders({
-      'Content-Type': 'application/json'
+      'Content-Type': 'application/x-www-form-urlencoded'
     })
   };
 
@@ -36,7 +35,7 @@ export class LedcontrolService {
   }
 
   getLedStatus(): Observable<LEDStatusJSON> {
-    let url = "http://" + this.ipAddress + this.ledGetURL
+    let url = "http://" + this.ipAddress + this.ledURL
     console.log('get led status from:' + url);
     if (this.useDummy) {
       url = "assets/ledstatus.json";
@@ -48,7 +47,7 @@ export class LedcontrolService {
   }
 
   saveStatus(ledstatus: LEDStatusJSON): Observable<any> {
-    let url = "http://" + this.ipAddress + this.ledApplyURL
+    let url = "http://" + this.ipAddress + this.ledURL
     console.log('get led status from:' + url);
     console.log(`Save: ` + ledstatus.Message + "mode: " + ledstatus.Mode + " Colors:[" +
       ledstatus.Brightness +
