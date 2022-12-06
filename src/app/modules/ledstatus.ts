@@ -4,7 +4,7 @@ export enum LEDMode {
   off,
   campfire,
   colorful,
-  autochange,
+  sunrise,
   pulse,
 }
 
@@ -35,6 +35,6 @@ export const LED_ON: LabeledLedMode = { label: "on", id: LEDMode.on };
 export const LED_OFF: LabeledLedMode = { label: "off", id: LEDMode.off };
 export const LED_CAMPFIRE: LabeledLedMode = { label: "campfire", id: LEDMode.campfire };
 export const LED_COLORS: LabeledLedMode = { label: "colorful", id: LEDMode.colorful };
-export const LED_AUTOCHANGE: LabeledLedMode = { label: "autochange", id: LEDMode.autochange };
+export const LED_SUNRISE: LabeledLedMode = { label: "sunrise", id: LEDMode.sunrise };
 export const LED_PULSE: LabeledLedMode = { label: "pulse", id: LEDMode.pulse };
 

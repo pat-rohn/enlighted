@@ -12,7 +12,10 @@ export class LocalstorageService {
 
   settings: Settings = {
     ledstatus: DEFAULT_LED_STATUS,
-    address: "192.168.4.1"
+    address: "192.168.4.1",
+    savedAddress1 : '192.168.4.1',
+    savedAddress2 : '192.168.1.142',
+    savedAddress3 : '192.168.1.241',
   };
 
   constructor(private ledControlService: LedcontrolService) { }
@@ -29,6 +32,16 @@ export class LocalstorageService {
       console.log(JSON.stringify(value));
     }
     //console.log(JSON.stringify(this.settings));
+      console.log(this.settings.savedAddress1 );
+    if (this.settings.savedAddress1 === undefined){
+      this.settings.savedAddress1 = "192.168.4.1"
+    }
+    if (this.settings.savedAddress2 === undefined){
+      this.settings.savedAddress2 = "192.168.1.142"
+    }
+    if (this.settings.savedAddress3 === undefined){
+      this.settings.savedAddress3 = "192.168.1.241"
+    }
     return this.settings;
   }
 

@@ -1,5 +1,8 @@
-<ng-container *ngIf="ledStatus">
-    <div>{{ledStatus.message}} </div>
+<ng-container *ngIf="ledStatus && settings">
+    <ion-item *ngIf="deviceSettings && deviceSettings.SunriseSettings">
+        <ion-label *ngIf="deviceSettings.SunriseSettings.IsActivated" color="warning">Sunrise Alarm is active
+        </ion-label>
+    </ion-item>
     <table class="table_center">
         <tr>
             <td>
@@ -12,25 +15,28 @@
                 <h2>{{ledStatus.brightness}}</h2>
             </td>
             <td>
-                <mat-slider class="red-slider" #red (slideend)="sliderRedOnChange(red.value)"
-                    (pointerup)="sliderRedOnChange(red.value)" thumbLabel [displayWith]="formatSlider"
-                    aria-label="units" min="0" max="100" step="1" value="{{ledStatus.red}}" vertical="true">
+                <mat-slider [disabled]="ledStatus.mode.id!=0" class="red-slider" #red
+                    (slideend)="sliderRedOnChange(red.value)" (pointerup)="sliderRedOnChange(red.value)" thumbLabel
+                    [displayWith]="formatSlider" aria-label="units" min="0" max="100" step="1" value="{{ledStatus.red}}"
+                    vertical="true">
                 </mat-slider>
                 <hr>
                 <h2>{{ledStatus.red}}</h2>
             </td>
             <td>
-                <mat-slider class="green-slider" #green (slideend)="sliderGreenOnChange(green.value)"
-                    (pointerup)="sliderGreenOnChange(green.value)" thumbLabel [displayWith]="formatSlider" 
-                    aria-label="units" min="0" max="100" step="1" value="{{ledStatus.green}}" vertical="true">
+                <mat-slider [disabled]="ledStatus.mode.id!=0" class="green-slider" #green
+                    (slideend)="sliderGreenOnChange(green.value)" (pointerup)="sliderGreenOnChange(green.value)"
+                    thumbLabel [displayWith]="formatSlider" aria-label="units" min="0" max="100" step="1"
+                    value="{{ledStatus.green}}" vertical="true">
                 </mat-slider>
                 <hr>
                 <h2>{{ledStatus.green}}</h2>
             </td>
             <td>
-                <mat-slider class="blue-slider" #blue (slideend)="sliderBlueOnChange(brightness.value)"
-                    (pointerup)="sliderBlueOnChange(blue.value)" thumbLabel [displayWith]="formatSlider"
-                    aria-label="units" min="0" max="100" step="1" value="{{ledStatus.blue}}" vertical="true">
+                <mat-slider [disabled]="ledStatus.mode.id!=0" class="blue-slider" #blue
+                    (slideend)="sliderBlueOnChange(brightness.value)" (pointerup)="sliderBlueOnChange(blue.value)"
+                    thumbLabel [displayWith]="formatSlider" aria-label="units" min="0" max="100" step="1"
+                    value="{{ledStatus.blue}}" vertical="true">
                 </mat-slider>
                 <hr>
                 <h2>{{ledStatus.blue}}</h2>
@@ -40,18 +46,30 @@
     <div>
         <mat-form-field appearance="fill">
             <mat-label>Mode</mat-label>
-            <mat-select (selectionChange)="onSelectChange($event.value)" [(ngModel)]="ledStatus.mode" [compareWith]="compareFn">
+            <mat-select (selectionChange)="onSelectChange($event.value)" [(ngModel)]="ledStatus.mode"
+                [compareWith]="compareFn">
                 <mat-option *ngFor="let mode of ledModes" [value]="mode">
                     {{mode.id}} {{mode.label}}
                 </mat-option>
             </mat-select>
         </mat-form-field>
         <br>
-        <button (click)="onOff()" mat-button color="warn">Off</button>
+
     </div>
     <hr>
-</ng-container>
+    <div>
+        <ion-button slot="end" color="primary" (click)="onOff()">Off</ion-button>
+        <div *ngIf="ledStatus.mode.id==0">
+            <!-- on -->
+            <ion-button slot="end" color="secondary" (click)="onChangeColor()">Change color</ion-button>
 
-<div>
-    <button (click)="onRefresh()" mat-button color="primary">Refresh</button>
-</div>
+        </div>
+        <ion-button slot="end" color="primary" (click)="onRefresh()">Refresh</ion-button>
+    </div>
+
+    <ion-item>
+        <ion-label color="medium">{{ledStatus.message}}</ion-label>
+    </ion-item>
+
+
+</ng-container>

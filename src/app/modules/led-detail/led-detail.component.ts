@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 
 import { LedcontrolService } from '../services/ledcontrol.service';
-import { LEDStatus, LEDStatusJSON, LabeledLedMode, LED_ON, LED_OFF, LED_PULSE, LED_CAMPFIRE, LED_COLORS, LED_AUTOCHANGE, LEDMode } from '../ledstatus';
-import { Settings } from '../settings'
+import { LEDStatus, LEDStatusJSON, LabeledLedMode, LED_ON, LED_OFF, LED_PULSE, LED_CAMPFIRE, LED_COLORS, LED_SUNRISE, LEDMode } from '../ledstatus';
+import { Settings, DeviceSettings } from '../settings'
 import { LocalstorageService } from '../services/localstorage.service';
 
 
@@ -15,13 +15,14 @@ export class LedDetailComponent implements OnInit {
   ledStatusJson?: LEDStatusJSON;
   ledStatus?: LEDStatus;
   settings?: Settings;
+  deviceSettings?: DeviceSettings;
 
   ledModes: LabeledLedMode[] = [
     LED_ON,
     LED_OFF,
     LED_CAMPFIRE,
     LED_COLORS,
-    LED_AUTOCHANGE,
+    LED_SUNRISE,
     LED_PULSE,
   ];
 
@@ -32,24 +33,14 @@ export class LedDetailComponent implements OnInit {
 
     this.settings = await this.localStorage.getSettings();
     this.ledcontrolService.setIpAddress(this.settings.address);
-    this.ledcontrolService.getLedStatus()
+
+    this.ledcontrolService.getDeviceSettings().subscribe(res => {
+      this.deviceSettings = res
+      this.ledcontrolService.getLedStatus()
       .subscribe(
-        ledstatus => this.applyLEDStatus(ledstatus),
-        /*ledstatus => {
-          this.ngZone.run(() => {
-            this.ledStatus = ledstatus;
-          });
-        }*/
-      );
-    this.ledcontrolService.getLedStatus()
-      .subscribe(
-        ledstatus => this.applyLEDStatus(ledstatus),
-        /*ledstatus => {
-          this.ngZone.run(() => {
-            this.ledStatus = ledstatus;
-          });
-        }*/
-      );
+        ledstatus => this.applyLEDStatus(ledstatus))
+    });
+    
     if (this.ledStatus != null) {
       console.log("On init: " + this.ledStatus.message);
     }
@@ -135,6 +126,68 @@ export class LedDetailComponent implements OnInit {
     console.log("Refresh:" + this.ledStatus.message);
     console.log("Brightness:" + this.ledStatus.brightness);
     console.log("Mode:" + this.ledStatus.mode.label);
+  }
+
+  onChangeColor() {
+
+    this.ledcontrolService.getLedStatus()
+      .subscribe(ledstatus => {
+        let color = Math.floor(Math.random() * 6)
+        switch (color) {
+          case 0:
+            console.log("red");
+            this.ledStatus.message = "red"
+            ledstatus.Red = 100;
+            ledstatus.Blue = 0;
+            ledstatus.Green = 0;
+            break;
+          case 1:
+            console.log("blue");
+            this.ledStatus.message = "blue"
+            ledstatus.Red = 0;
+            ledstatus.Blue = 100;
+            ledstatus.Green = 0;
+            break;
+          case 2:
+            console.log("green");
+            this.ledStatus.message = "green"
+            ledstatus.Red = 0;
+            ledstatus.Blue = 0;
+            ledstatus.Green = 100;
+            break;
+          case 3:
+            console.log("bg");
+            this.ledStatus.message = "bg"
+            ledstatus.Red = 0;
+            ledstatus.Blue = 50;
+            ledstatus.Green = 50;
+            break;
+          case 4:
+            console.log("rg");
+            this.ledStatus.message = "rg"
+            ledstatus.Red = 50;
+            ledstatus.Blue = 0;
+            ledstatus.Green = 50;
+            break;
+          case 5:
+            console.log("rb");
+            this.ledStatus.message = "rb"
+            ledstatus.Red = 50;
+            ledstatus.Blue = 50;
+            ledstatus.Green = 0;
+            break;
+        }
+
+        this.applyLEDStatus(ledstatus)
+        this.onSave()
+      }
+
+        /*ledstatus => {
+          this.ngZone.run(() => {
+            this.ledStatus = ledstatus;
+          });
+        }*/
+      );
   }
 
   compareFn(e1: LabeledLedMode, e2: LabeledLedMode): boolean {

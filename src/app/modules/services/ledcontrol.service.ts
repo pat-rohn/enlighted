@@ -6,6 +6,7 @@ import { catchError, map, tap } from 'rxjs/operators';
 import { LEDStatus, LEDStatusJSON } from '../ledstatus';
 import { DEFAULT_LED_STATUS } from '../ledstatus-mockup';
 import { ToastController } from '@ionic/angular';
+import { DeviceSettings } from '../settings';
 
 
 @Injectable({
@@ -15,7 +16,6 @@ export class LedcontrolService {
   ipAddress?: string;
   ledStatus: LEDStatus;
 
-  private ledURL = "/api/led";
 
   private useDummy: boolean = false;
 
@@ -35,7 +35,7 @@ export class LedcontrolService {
   }
 
   getLedStatus(): Observable<LEDStatusJSON> {
-    let url = "http://" + this.ipAddress + this.ledURL
+    let url = "http://" + this.ipAddress + "/api/led"
     console.log('get led status from:' + url);
     if (this.useDummy) {
       url = "assets/ledstatus.json";
@@ -47,7 +47,7 @@ export class LedcontrolService {
   }
 
   saveStatus(ledstatus: LEDStatusJSON): Observable<any> {
-    let url = "http://" + this.ipAddress + this.ledURL
+    let url = "http://" + this.ipAddress + "/api/led"
     console.log('get led status from:' + url);
     console.log(`Save: ` + ledstatus.Message + "mode: " + ledstatus.Mode + " Colors:[" +
       ledstatus.Brightness +
@@ -60,6 +60,28 @@ export class LedcontrolService {
       catchError(this.handleError<any>('saveStatus'))
     );
   }
+
+  getDeviceSettings(): Observable<DeviceSettings> {
+    let url = "http://" + this.ipAddress + "/api/config"
+    console.log('get led status from:' + url);
+    if (this.useDummy) {
+      url = "assets/device-settings.json";
+    }
+    return this.http.get<DeviceSettings>(url).pipe(
+      tap(_ => console.log('fetched device settings')),
+      catchError(this.handleError<DeviceSettings>('Get Device Settings', null))
+    );
+  }
+
+  applyDeviceSettings(deviceSettings: DeviceSettings): Observable<any> {
+    let url = "http://" + this.ipAddress + "/api/config"
+    console.log('get device settings from :' + url);
+    console.log(`Apply: ` + JSON.stringify(deviceSettings))
+    return this.http.post(url, deviceSettings, this.httpOptions).pipe(
+      catchError(this.handleError<any>('Apply Device Settings'))
+    );
+  }
+
 
   /**
  * Handle Http operation that failed.
