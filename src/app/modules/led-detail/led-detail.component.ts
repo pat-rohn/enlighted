@@ -37,10 +37,10 @@ export class LedDetailComponent implements OnInit {
     this.ledcontrolService.getDeviceSettings().subscribe(res => {
       this.deviceSettings = res
       this.ledcontrolService.getLedStatus()
-      .subscribe(
-        ledstatus => this.applyLEDStatus(ledstatus))
+        .subscribe(
+          ledstatus => this.applyLEDStatus(ledstatus))
     });
-    
+
     if (this.ledStatus != null) {
       console.log("On init: " + this.ledStatus.message);
     }
@@ -106,13 +106,20 @@ export class LedDetailComponent implements OnInit {
     }
   }
 
-  onOff(): void {
+  onPower(): void {
     if (this.ledStatus) {
-      this.ledStatus.mode = LED_OFF;
+      if (this.ledStatus.mode == LED_OFF) {
+        this.ledStatus.mode = LED_ON;
+        console.log("Power button: ON");
+      } else {
+        this.ledStatus.mode = LED_OFF;
+        console.log("Power button: OFF");
+      }
       this.ledcontrolService.saveStatus(this.getJson())
-        .subscribe(() => console.log("save led detail component: off"));
+        .subscribe(() => console.log("Power button: " + JSON.stringify(this.ledModes)));
     }
   }
+
   onRefresh() {
     this.ledcontrolService.getLedStatus()
       .subscribe(

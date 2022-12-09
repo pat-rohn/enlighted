@@ -3,6 +3,9 @@
         <ion-label *ngIf="deviceSettings.SunriseSettings.IsActivated" color="warning">Sunrise Alarm is active
         </ion-label>
     </ion-item>
+    <div class="refresh_button">
+        <ion-icon name="reload-outline" slot="start" size="large" (click)="onRefresh()"></ion-icon>
+    </div>
     <table class="table_center">
         <tr>
             <td>
@@ -58,13 +61,12 @@
     </div>
     <hr>
     <div>
-        <ion-button slot="end" color="primary" (click)="onOff()">Off</ion-button>
+        <ion-icon name="power" size="large" (click)="onPower()"></ion-icon>
         <div *ngIf="ledStatus.mode.id==0">
             <!-- on -->
             <ion-button slot="end" color="secondary" (click)="onChangeColor()">Change color</ion-button>
 
         </div>
-        <ion-button slot="end" color="primary" (click)="onRefresh()">Refresh</ion-button>
     </div>
 
     <ion-item>

@@ -1,23 +1,26 @@
 <div *ngIf="settings">
     <ion-item>
-        <ion-label>IP Address</ion-label>
+        <ion-select [compareWith]="compareWith" placeholder="Select Device" (ionChange)="handleChange($event)">
+            <ion-select-option *ngFor="let address of settings.usedAddresses" [value]="address">{{ address }}
+            </ion-select-option>
+        </ion-select>
+    </ion-item>
+    <ion-item> 
+        <ion-label>Device Address</ion-label>
         <ion-input type="text" ngDefaultControl [(ngModel)]="settings.address" text-right id="input"></ion-input>
     </ion-item>
-    <ion-button slot="end" color="primary" (click)="clickedSave()">Save IP address</ion-button>
-
-    <ion-item>
-        <ion-label>{{settings.savedAddress1}} : {{settings.savedAddress2}} : {{settings.savedAddress3}}</ion-label>
-    </ion-item>
+    <div class="save_button">
+        <ion-icon name="save" size="large"  (click)="clickedSave()"></ion-icon>
+      </div>
     <ion-item lines="inset">
-        <ion-icon name="star" slot="start"></ion-icon>
-        <ion-label>Device Settings</ion-label>
+        <ion-title>Device Settings</ion-title>
+        <ion-icon slote="end" name="reload-outline" size="large" (click)="clickedRefreshDevice()"></ion-icon>
     </ion-item>
     <br>
-    <ion-button color="primary" (click)="clickedRefreshDevice()">Refresh</ion-button>
 
     <div *ngIf="deviceSettings">
         <ion-item>
-            <ion-label>SensorID</ion-label>
+            <ion-label>Device Name</ion-label>
             <ion-input slot="end" type="text" ngDefaultControl [(ngModel)]="deviceSettings.SensorID" text-right
                 id="input">
             </ion-input>
@@ -89,6 +92,8 @@
                 id="input">
             </ion-input>
         </ion-item>
-        <ion-button color="primary" (click)="clickedApplyDeviceSettings()">Apply</ion-button>
+        <div class="save_button">
+            <ion-icon name="save" size="large"  (click)="clickedApplyDeviceSettings()"></ion-icon>
+          </div>
 
     </div>

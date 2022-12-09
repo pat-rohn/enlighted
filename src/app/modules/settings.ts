@@ -5,9 +5,7 @@ import { LEDStatus } from './ledstatus';
 export interface Settings {
   ledstatus: LEDStatus;
   address: string;
-  savedAddress1: string;
-  savedAddress2: string;
-  savedAddress3: string;
+  usedAddresses: string[];
 }
 
 export interface DaySetting {

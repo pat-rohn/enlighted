@@ -30,14 +30,10 @@ export class SettingsViewComponent implements OnInit {
 
   async clickedSave() {
     
-    if (this.settings.savedAddress2.length > 0 && this.settings.savedAddress3 !== this.settings.savedAddress2) {
-      this.settings.savedAddress3 = this.settings.savedAddress2
+    if (this.settings.usedAddresses.findIndex(element => element == this.settings.address)<0){
+      this.settings.usedAddresses.push(this.settings.address)
     }
-    if (this.settings.savedAddress1.length > 0 && this.settings.savedAddress2 !== this.settings.savedAddress1) {
-      this.settings.savedAddress2 = this.settings.savedAddress1
-    }
-    this.settings.savedAddress1 = this.settings.address
-    this.localStorage.setSettings(this.settings);
+    this.localStorage.setSettings(this.settings).then(_ => this.clickedRefreshDevice())
   }
 
   async clickedRefreshDevice() {
@@ -53,6 +49,15 @@ export class SettingsViewComponent implements OnInit {
     this.ledcontrolService.applyDeviceSettings(this.deviceSettings).subscribe(_ => {
       this.ledcontrolService.getDeviceSettings().subscribe(res => this.deviceSettings = res);
     });
+  }
+
+  compareWith(o1, o2) {
+    return o1 && o2 ? o1 === o2 : o1 === o2;
+  }
+
+  handleChange(ev) {
+    this.settings.address = ev.target.value;
+    this.clickedSave();
   }
 
 }

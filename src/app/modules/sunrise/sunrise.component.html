@@ -1,11 +1,13 @@
 <div *ngIf="settings">
 
-  <ion-button color="primary" (click)="clickedRefresh()">Refresh</ion-button>
+  <div class="refresh_button">
+    <ion-icon name="reload-outline" slot="start" size="large" (click)="clickedRefresh()"></ion-icon>
+  </div>
 
   <div *ngIf="sunriseSettings">
 
     <ion-item>
-      <ion-label>SensorID</ion-label>
+      <ion-label>Light Time</ion-label>
       <ion-input type="number" ngDefaultControl [(ngModel)]="sunriseSettings.SunriseLightTime" text-right id="input">
       </ion-input>
     </ion-item>
@@ -106,7 +108,9 @@
         </ion-input>
       </ion-item>
     </div>
-      <ion-button color="primary" (click)="clickedSave()">Save</ion-button>
+    <div class="save_button">
+      <ion-icon name="save" size="large"  (click)="clickedSave()"></ion-icon>
+    </div>
 
 
 
