@@ -1,0 +1,50 @@
+/*@use 'sass:map';
+@use '@angular/material' as mat;
+$my-palette: mat.$indigo-palette;
+    
+
+*/
+ion-range {
+  --bar-background-active: #bde0fe;
+  --bar-height: 8px;
+  --bar-border-radius: 8px;
+  --knob-background: #706a6c;
+  --knob-size: 40px;
+}
+.slider_brightness{
+  --bar-background-active: #706a6c;
+  --knob-background: #706a6c;
+}
+.slider_red{
+  --bar-background-active: #d60857;
+  --knob-background: #d60857;
+
+}
+.slider_green{
+  --bar-background-active: #00cc1b;
+  --knob-background: #00cc1b;
+
+}
+.slider_blue{
+  --bar-background-active: #070be7;
+  --knob-background: #070be7;
+}
+h1 {
+  text-align: center;
+}
+h2 {
+  text-align: center;
+}
+p {
+  text-align: center;
+}
+div {
+  text-align: center;
+}
+.table_center {
+  margin-left: auto;
+  margin-right: auto;
+}
+button {
+  width: 160px;
+}

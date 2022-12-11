@@ -1,0 +1,62 @@
+<ion-content>
+    <ion-refresher slot="fixed" (ionRefresh)="handleRefresh($event)" pullFactor="0.5" pullMin="80" pullMax="200">
+        <ion-refresher-content></ion-refresher-content>
+    </ion-refresher>
+    <div *ngIf="ledStatus && settings">
+        <div *ngIf="deviceSettings && deviceSettings.SunriseSettings && deviceSettings.SunriseSettings.IsActivated">
+            <ion-item>
+                <ion-icon name="warning-outline" style="padding:30px"></ion-icon>
+                <ion-label color="warning">Sunrise Alarm is active
+                </ion-label>
+            </ion-item>
+        </div>
+
+        <ion-range class="slider_brightness" (ionKnobMoveEnd)="onSliderChange($event)"
+            [(ngModel)]="ledStatus.brightness" [pinFormatter]="pinFormatter" [pin]="true">
+            <ion-icon slot="end" name="sunny-outline"></ion-icon>
+        </ion-range>
+
+        <ion-range class="slider_red" (ionKnobMoveEnd)="onSliderChange($event)" [(ngModel)]="ledStatus.red"
+            [pinFormatter]="pinFormatter" [pin]="true">
+            <ion-icon slot="end" name="sunny-outline"></ion-icon>
+        </ion-range>
+
+        <ion-range class="slider_green" (ionKnobMoveEnd)="onSliderChange($event)" [(ngModel)]="ledStatus.green"
+            [pinFormatter]="pinFormatter" [pin]="true">
+            <ion-icon slot="end" name="sunny-outline"></ion-icon>
+        </ion-range>
+
+        <ion-range class="slider_blue" (ionKnobMoveEnd)="onSliderChange($event)" [(ngModel)]="ledStatus.blue"
+            [pinFormatter]="pinFormatter" [pin]="true">
+            <ion-icon slot="end" name="sunny-outline"></ion-icon>
+        </ion-range>
+
+        <div>
+            <mat-form-field appearance="fill">
+                <mat-label>Mode</mat-label>
+                <mat-select (selectionChange)="onSelectChange($event.value)" [(ngModel)]="ledStatus.mode"
+                    [compareWith]="compareFn">
+                    <mat-option *ngFor="let mode of ledModes" [value]="mode">
+                        {{mode.id}} {{mode.label}}
+                    </mat-option>
+                </mat-select>
+            </mat-form-field>
+            <br>
+
+        </div>
+        <hr>
+        <div>
+            <ion-icon name="power" size="large" (click)="onPower()"></ion-icon>
+            <div *ngIf="ledStatus.mode.id==0">
+                <!-- on -->
+                <ion-icon name="repeat-outline" size="large" (click)="onChangeColor()"></ion-icon>
+            </div>
+        </div>
+
+        <ion-item>
+            <ion-label color="medium">{{ledStatus.message}}</ion-label>
+        </ion-item>
+
+
+    </div>
+</ion-content>

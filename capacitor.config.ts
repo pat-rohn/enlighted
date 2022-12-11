@@ -2,7 +2,7 @@ import { CapacitorConfig } from '@capacitor/cli';
 
 const config: CapacitorConfig = {
   appId: 'io.ionic.enlighted',
-  appName: 'Enlighted',
+  appName: 'enlighted',
   webDir: 'www',
   bundledWebRuntime: false
 };
