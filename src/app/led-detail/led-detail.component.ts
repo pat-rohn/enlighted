@@ -32,7 +32,8 @@ export class LedDetailComponent implements OnInit {
     LED_PULSE,
   ];
 
-  constructor(private ledcontrolService: LedcontrolService, private localStorage: LocalstorageService) {
+  constructor(private ledcontrolService: LedcontrolService,
+    private localStorage: LocalstorageService) {
   }
 
   async ngOnInit() {
@@ -78,8 +79,6 @@ export class LedDetailComponent implements OnInit {
       console.log("change mode");
       this.ledStatus.mode = mode;
       if (this.ledStatus.mode == null) {
-
-        //this.ledStatus.mode = {label: "on", id: (1)};
         console.log("mode not defined: " + value);
       }
       this.ledcontrolService.saveStatus(this.getJson())
@@ -109,7 +108,7 @@ export class LedDetailComponent implements OnInit {
   }
 
   handleRefresh(event: any) {
-    this.onRefresh().then(_ =>{
+    this.onRefresh().then(_ => {
       console.log("handle Refresher complete")
       event.target.complete()
     }
@@ -117,12 +116,13 @@ export class LedDetailComponent implements OnInit {
   };
 
   async onRefresh() {
-    this.ledcontrolService.getLedStatus()
-      .subscribe(
+    this.ledcontrolService.getDeviceSettings().subscribe(res => {
+      this.deviceSettings = res
+      this.ledcontrolService.getLedStatus().subscribe(
         {
-          next: (ledstatus) => {
-            console.log('Observer got a next value: ' + JSON.stringify(ledstatus)),
-              this.applyLEDStatus(ledstatus)
+          next: (ledJson) => {
+            console.log('Observer got a next value: ' + ledJson),
+              this.applyLEDStatus(ledJson);
           },
           error: (error) => {
             console.error('Observer got an error: ' + error)
@@ -136,18 +136,13 @@ export class LedDetailComponent implements OnInit {
             }
           },
           complete: () => {
-            console.log('onRefresh Complete ')
-
-            console.log("Refresh:" + this.ledStatus!.message);
-            console.log("Brightness:" + this.ledStatus!.brightness);
-            console.log("Mode:" + this.ledStatus!.mode.label);
           }
         }
-      );
+      )
+    });
   }
 
   onChangeColor() {
-
     this.ledcontrolService.getLedStatus()
       .subscribe(ledstatus => {
         let color = Math.floor(Math.random() * 6)
@@ -198,14 +193,7 @@ export class LedDetailComponent implements OnInit {
 
         this.applyLEDStatus(ledstatus)
         this.onSave()
-      }
-
-        /*ledstatus => {
-          this.ngZone.run(() => {
-            this.ledStatus = ledstatus;
-          });
-        }*/
-      );
+      });
   }
 
   compareFn(e1: LabeledLedMode, e2: LabeledLedMode): boolean {
