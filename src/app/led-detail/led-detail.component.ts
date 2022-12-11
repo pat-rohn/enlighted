@@ -5,7 +5,6 @@ import { LEDStatus, LEDStatusJSON, LabeledLedMode, LED_ON, LED_OFF, LED_PULSE, L
 import { Settings, DeviceSettings } from '../settings'
 import { LocalstorageService } from '../services/localstorage.service';
 
-
 @Component({
   selector: 'app-led-detail',
   templateUrl: './led-detail.component.html',
@@ -13,7 +12,14 @@ import { LocalstorageService } from '../services/localstorage.service';
 })
 export class LedDetailComponent implements OnInit {
   ledStatusJson?: LEDStatusJSON;
-  ledStatus?: LEDStatus;
+  ledStatus: LEDStatus = {
+    red: 0,
+    green: 0,
+    blue: 0,
+    brightness: 35,
+    mode: LED_OFF,
+    message: "Not Connected",
+  };
   settings?: Settings;
   deviceSettings?: DeviceSettings;
 
@@ -31,57 +37,39 @@ export class LedDetailComponent implements OnInit {
 
   async ngOnInit() {
 
+    console.log("On init");
     this.settings = await this.localStorage.getSettings();
     this.ledcontrolService.setIpAddress(this.settings.address);
-
     this.ledcontrolService.getDeviceSettings().subscribe(res => {
       this.deviceSettings = res
-      this.ledcontrolService.getLedStatus()
-        .subscribe(
-          ledstatus => this.applyLEDStatus(ledstatus))
+      this.ledcontrolService.getLedStatus().subscribe(
+        {
+          next: (ledJson) => {
+            console.log('Observer got a next value: ' + ledJson),
+              this.applyLEDStatus(ledJson);
+          },
+          error: (error) => {
+            console.error('Observer got an error: ' + error)
+          },
+          complete: () => {
+          }
+        }
+      )
     });
 
     if (this.ledStatus != null) {
       console.log("On init: " + this.ledStatus.message);
     }
-
   }
 
-  formatSlider(value: number) {
-    return value + "%";
+  pinFormatter(value: number) {
+    return `${value}%`;
   }
 
-  sliderBrightnessOnChange(value: number) {
-    console.log("brightness: " + value);
-    if (this.ledStatus != null) {
-      this.ledStatus.brightness = value;
-      this.onSave();
-    }
+  onSliderChange(ev: Event) {
+    this.onSave();
   }
 
-  sliderRedOnChange(value: number) {
-    console.log("red: " + value);
-    if (this.ledStatus != null) {
-      this.ledStatus.red = value;
-      this.onSave();
-    }
-  }
-
-  sliderGreenOnChange(value: number) {
-    console.log("green: " + value);
-    if (this.ledStatus != null) {
-      this.ledStatus.green = value;
-      this.onSave();
-    }
-  }
-
-  sliderBlueOnChange(value: number) {
-    console.log("blue: " + value);
-    if (this.ledStatus != null) {
-      this.ledStatus.blue = value;
-      this.onSave();
-    }
-  }
 
   onSelectChange(value: LabeledLedMode): void {
     console.log("ion change");
@@ -120,19 +108,42 @@ export class LedDetailComponent implements OnInit {
     }
   }
 
-  onRefresh() {
+  handleRefresh(event: any) {
+    this.onRefresh().then(_ =>{
+      console.log("handle Refresher complete")
+      event.target.complete()
+    }
+    )
+  };
+
+  async onRefresh() {
     this.ledcontrolService.getLedStatus()
       .subscribe(
-        ledstatus => this.applyLEDStatus(ledstatus),
-        /*ledstatus => {
-         this.ngZone.run(() => {
-           this.ledStatus = ledstatus;
-         });
-       }*/
+        {
+          next: (ledstatus) => {
+            console.log('Observer got a next value: ' + JSON.stringify(ledstatus)),
+              this.applyLEDStatus(ledstatus)
+          },
+          error: (error) => {
+            console.error('Observer got an error: ' + error)
+            this.ledStatus = {
+              red: 0,
+              green: 0,
+              blue: 0,
+              brightness: 0,
+              message: "No connection",
+              mode: LED_OFF
+            }
+          },
+          complete: () => {
+            console.log('onRefresh Complete ')
+
+            console.log("Refresh:" + this.ledStatus!.message);
+            console.log("Brightness:" + this.ledStatus!.brightness);
+            console.log("Mode:" + this.ledStatus!.mode.label);
+          }
+        }
       );
-    console.log("Refresh:" + this.ledStatus.message);
-    console.log("Brightness:" + this.ledStatus.brightness);
-    console.log("Mode:" + this.ledStatus.mode.label);
   }
 
   onChangeColor() {
@@ -143,42 +154,42 @@ export class LedDetailComponent implements OnInit {
         switch (color) {
           case 0:
             console.log("red");
-            this.ledStatus.message = "red"
+            this.ledStatus!.message = "red"
             ledstatus.Red = 100;
             ledstatus.Blue = 0;
             ledstatus.Green = 0;
             break;
           case 1:
             console.log("blue");
-            this.ledStatus.message = "blue"
+            this.ledStatus!.message = "blue"
             ledstatus.Red = 0;
             ledstatus.Blue = 100;
             ledstatus.Green = 0;
             break;
           case 2:
             console.log("green");
-            this.ledStatus.message = "green"
+            this.ledStatus!.message = "green"
             ledstatus.Red = 0;
             ledstatus.Blue = 0;
             ledstatus.Green = 100;
             break;
           case 3:
             console.log("bg");
-            this.ledStatus.message = "bg"
+            this.ledStatus!.message = "bg"
             ledstatus.Red = 0;
             ledstatus.Blue = 50;
             ledstatus.Green = 50;
             break;
           case 4:
             console.log("rg");
-            this.ledStatus.message = "rg"
+            this.ledStatus!.message = "rg"
             ledstatus.Red = 50;
             ledstatus.Blue = 0;
             ledstatus.Green = 50;
             break;
           case 5:
             console.log("rb");
-            this.ledStatus.message = "rb"
+            this.ledStatus!.message = "rb"
             ledstatus.Red = 50;
             ledstatus.Blue = 50;
             ledstatus.Green = 0;
@@ -209,7 +220,7 @@ export class LedDetailComponent implements OnInit {
         green: jsonStatus.Green,
         blue: jsonStatus.Blue,
         brightness: jsonStatus.Brightness,
-        mode: null,
+        mode: LED_OFF,
         message: jsonStatus.Message
       }
     } else {
@@ -227,12 +238,12 @@ export class LedDetailComponent implements OnInit {
 
   getJson(): LEDStatusJSON {
     var jsonLED: LEDStatusJSON = {
-      Red: this.ledStatus.red,
-      Green: this.ledStatus.green,
-      Blue: this.ledStatus.blue,
-      Brightness: this.ledStatus.brightness,
-      Mode: this.ledStatus.mode.id,
-      Message: this.ledStatus.message,
+      Red: this.ledStatus!.red,
+      Green: this.ledStatus!.green,
+      Blue: this.ledStatus!.blue,
+      Brightness: this.ledStatus!.brightness,
+      Mode: this.ledStatus!.mode.id,
+      Message: this.ledStatus!.message,
     }
     return jsonLED;
   }

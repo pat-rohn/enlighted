@@ -76,7 +76,7 @@
   --ion-color-light-tint: #f5f6f9;
 }
 
-@media (prefers-color-scheme: light) {
+@media (prefers-color-scheme: dark) {
   /*
    * Dark Colors
    * -------------------------------------------
@@ -234,19 +234,3 @@
     --ion-card-background: #1e1e1e;
   }
 }
-
-/*
-.mat-accent .mat-slider-track-fill {
-  background-color: rgb(48, 12, 134) !important;
-}
-
-.mat-slider-thumb-label {
-  background-color: rgb(37, 19, 141) !important;
-
-}
-
-.mat-slider-thumb {
-  background-color: rgb(17, 91, 139) !important;
-}
-
-*/

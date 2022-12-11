@@ -1,7 +1,7 @@
 import { Injectable, Input } from '@angular/core';
 import { Observable, of } from 'rxjs';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { catchError, map, tap } from 'rxjs/operators';
+import { catchError, timeout, tap, switchMap } from 'rxjs/operators';
 
 import { LEDStatus, LEDStatusJSON } from '../ledstatus';
 import { DEFAULT_LED_STATUS } from '../ledstatus-mockup';
@@ -42,7 +42,7 @@ export class LedcontrolService {
     }
     return this.http.get<LEDStatusJSON>(url).pipe(
       tap(_ => console.log('fetched led status')),
-      catchError(this.handleError<LEDStatusJSON>('getLedStatus', null))
+      catchError(this.handleError<LEDStatusJSON>('getLedStatus'))
     );
   }
 
@@ -63,14 +63,15 @@ export class LedcontrolService {
 
   getDeviceSettings(): Observable<DeviceSettings> {
     let url = "http://" + this.ipAddress + "/api/config"
-    console.log('get led status from:' + url);
+    console.log('get device settings from:' + url);
     if (this.useDummy) {
       url = "assets/device-settings.json";
     }
     return this.http.get<DeviceSettings>(url).pipe(
+      timeout(2000),
       tap(_ => console.log('fetched device settings')),
-      catchError(this.handleError<DeviceSettings>('Get Device Settings', null))
-    );
+      catchError(this.handleError<DeviceSettings>('Get Device Settings'))
+  );
   }
 
   applyDeviceSettings(deviceSettings: DeviceSettings): Observable<any> {
@@ -83,22 +84,14 @@ export class LedcontrolService {
   }
 
 
-  /**
- * Handle Http operation that failed.
- * Let the app continue.
- * @param operation - name of the operation that failed
- * @param result - optional value to return as the observable result
- */
+
   private handleError<T>(operation = 'operation', result?: T) {
     return (error: any): Observable<T> => {
 
-      // TODO: send the error to remote logging infrastructure
-      console.error(error); // log to console instead
+      console.error(error); 
 
-      // TODO: better job of transforming error for user consumption
       console.log(`${operation} failed: ${error.message}`);
       this.presentToast(`${operation} failed: ${error.message}`);
-      // Let the app keep running by returning an empty result.
       return of(result as T);
     };
   }
