@@ -8,6 +8,8 @@
     "WindSensorPin": -1,
     "RainfallSensorPin": -1,
     "LEDPin": 0,
+    "Button1": -1,
+    "Button2": -1,
     "NumberOfLEDs": 30,
     "FindSensors": false,
     "IsOfflineMode": false,

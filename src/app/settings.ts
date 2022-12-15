@@ -36,6 +36,8 @@ export interface DeviceSettings {
   WindSensorPin: number;
   RainfallSensorPin: number;
   LEDPin: number;
+  Button1: number;
+  Button2: number;
   NumberOfLEDs: number;
   FindSensors: boolean;
   IsOfflineMode: boolean;
