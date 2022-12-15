@@ -1,8 +1,6 @@
 ## Get started
 ```
-install nodejs LTS (16.xx)
-npm install
-ng add @angular/material
+https://capacitorjs.com/docs/getting-started/with-ionic
 ```
 
 ```
@@ -10,9 +8,11 @@ ionic serve
 
 ```
 
-## Build for android
+## Open in Android Studio
 ```
-ionic capacitor build android
+ionic build
+npx cap sync
+npx cap open android
 ```
 Open ./android project with Android Studio
 
