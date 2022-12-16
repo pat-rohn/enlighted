@@ -9,7 +9,7 @@ Small project to configure and control ESP32/ESP8266 using HTTP. Compatible with
 
 ![alt text](https://raw.githubusercontent.com/pat-rohn/enlightened/main/example-settings.png)
 ![alt text](https://raw.githubusercontent.com/pat-rohn/enlightened/main/example-led-control.png)
-![alt text](https://raw.githubusercontent.com/pat-rohn/enlightened/main/example-settings.png)
+![alt text](https://raw.githubusercontent.com/pat-rohn/enlightened/main/example-alarm.png)
 
 ## Get started
 [ionic with capacitor](https://capacitorjs.com/docs/getting-started/with-ionic)
