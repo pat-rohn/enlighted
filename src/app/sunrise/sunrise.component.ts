@@ -14,6 +14,7 @@ export class SunriseComponent implements OnInit {
   settings?: Settings;
   sunriseSettings?: SunriseSettings;
   deviceSettings?: DeviceSettings;
+  currentTime = "-";
 
 
   constructor(
@@ -28,14 +29,23 @@ export class SunriseComponent implements OnInit {
       res => {
         this.settings = res
         this.ledcontrolService.setIpAddress(this.settings.address)
-        this.ledcontrolService.getDeviceSettings().subscribe(res => {
-          this.sunriseSettings = res.SunriseSettings;
-          this.deviceSettings = res;
-        },
-          error => {
-            console.log(JSON.stringify(error));
-          }
-        )
+        this.ledcontrolService.getDeviceSettings().subscribe(
+          {
+            next: (res) => {
+              this.sunriseSettings = res.SunriseSettings;
+              this.deviceSettings = res;
+            },
+            error: (e) => console.error(e),
+            complete: () => console.info('complete') 
+        })
+        this.ledcontrolService.getTime().subscribe(
+          {
+           next : (res) => {
+              this.currentTime = res;
+            },
+            error: (e) => console.error(e),
+            complete: () => console.info('complete') 
+        })
       }
     );
   }
@@ -53,8 +63,16 @@ export class SunriseComponent implements OnInit {
       this.sunriseSettings = res.SunriseSettings
       this.deviceSettings = res;
       console.log(JSON.stringify(res))
-    }
-    );
+    });
+    this.ledcontrolService.getTime().subscribe(
+      {
+        next: (res) => {
+          this.currentTime = res;
+          console.log("Current Time " + res)
+        },
+        error: (e) => console.error(e),
+        complete: () => console.info('complete') 
+    })
   }
 
   async clickedSave() {

@@ -68,10 +68,36 @@ export class LedcontrolService {
       url = "assets/device-settings.json";
     }
     return this.http.get<DeviceSettings>(url).pipe(
-      timeout(2000),
+      timeout(1000),
       tap(_ => console.log('fetched device settings')),
       catchError(this.handleError<DeviceSettings>('Get Device Settings'))
-  );
+    );
+  }
+
+  getTime(): Observable<string> {
+
+    let url = "http://" + this.ipAddress + "/api/time"
+    console.log('get device settings from:' + url);
+    if (this.useDummy) {
+      url = "assets/time.txt";
+    }
+    return this.http.get(url, { responseType: 'text' }).pipe(
+      timeout(1000),
+      tap(_ => console.log('fetched device settings')),
+      catchError(this.handleError<string>('Get Device Settings')));
+  }
+
+  getTime2(): Observable<string> {
+    let url = "http://" + this.ipAddress + "/api/time"
+    console.log('get time from:' + url);
+    if (this.useDummy) {
+      url = "assets/time.txt";
+    }
+    return this.http.get<string>(url).pipe(
+      timeout(1000),
+      tap(_ => console.log('fetched time')),
+      catchError(this.handleError<string>('Time'))
+    );
   }
 
   applyDeviceSettings(deviceSettings: DeviceSettings): Observable<any> {
@@ -88,7 +114,7 @@ export class LedcontrolService {
   private handleError<T>(operation = 'operation', result?: T) {
     return (error: any): Observable<T> => {
 
-      console.error(error); 
+      console.error(error);
 
       console.log(`${operation} failed: ${error.message}`);
       this.presentToast(`${operation} failed: ${error.message}`);
@@ -98,7 +124,7 @@ export class LedcontrolService {
   async presentToast(message: string) {
     const toast = await this.toastController.create({
       message: message,
-      duration: 2000
+      duration: 1500
     });
     toast.present();
   }
