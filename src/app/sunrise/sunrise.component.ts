@@ -15,6 +15,7 @@ export class SunriseComponent implements OnInit {
   sunriseSettings?: SunriseSettings;
   deviceSettings?: DeviceSettings;
   currentTime = "-";
+  enableSave = true;
 
 
   constructor(
@@ -54,21 +55,25 @@ export class SunriseComponent implements OnInit {
     this.clickedRefresh().then(_ => {
       console.log("handle Refresher complete")
       event.target.complete()
+      this.enableSave = true;
     })
   };
 
 
   async clickedRefresh() {
+    this.enableSave = false;
     this.ledcontrolService.getDeviceSettings().subscribe(res => {
       this.sunriseSettings = res.SunriseSettings
       this.deviceSettings = res;
       console.log(JSON.stringify(res))
+      this.enableSave = true;
     });
     this.ledcontrolService.getTime().subscribe(
       {
         next: (res) => {
           this.currentTime = res;
           console.log("Current Time " + res)
+
         },
         error: (e) => console.error(e),
         complete: () => console.info('complete') 
@@ -76,11 +81,13 @@ export class SunriseComponent implements OnInit {
   }
 
   async clickedSave() {
+    this.enableSave = false;
     console.log(JSON.stringify(this.deviceSettings))
     this.ledcontrolService.applyDeviceSettings(this.deviceSettings!).subscribe(_ => {
       this.ledcontrolService.getDeviceSettings().subscribe(res => {
         this.deviceSettings = res;
         this.sunriseSettings = res.SunriseSettings;
+        this.enableSave = true;
       });
     });
   }

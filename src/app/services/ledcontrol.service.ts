@@ -87,18 +87,6 @@ export class LedcontrolService {
       catchError(this.handleError<string>('Get Device Settings')));
   }
 
-  getTime2(): Observable<string> {
-    let url = "http://" + this.ipAddress + "/api/time"
-    console.log('get time from:' + url);
-    if (this.useDummy) {
-      url = "assets/time.txt";
-    }
-    return this.http.get<string>(url).pipe(
-      timeout(1000),
-      tap(_ => console.log('fetched time')),
-      catchError(this.handleError<string>('Time'))
-    );
-  }
 
   applyDeviceSettings(deviceSettings: DeviceSettings): Observable<any> {
     let url = "http://" + this.ipAddress + "/api/config"

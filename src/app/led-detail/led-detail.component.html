@@ -49,10 +49,12 @@
             <ion-icon name="power" size="large" (click)="onPower()"></ion-icon>
             <div *ngIf="ledStatus.mode.id==0">
                 <!-- on -->
-                <ion-icon name="repeat-outline" size="large" (click)="onChangeColor()"></ion-icon>
+                <br>
+                <ion-icon name="repeat-outline" size="large" (click)="onChangeColor()" ></ion-icon>
             </div>
         </div>
-
+        <ion-item>
+        </ion-item>
         <ion-item>
             <ion-label color="medium">{{ledStatus.message}}</ion-label>
         </ion-item>

@@ -2,20 +2,27 @@
   <ion-refresher slot="fixed" (ionRefresh)="handleRefresh($event)">
     <ion-refresher-content></ion-refresher-content>
   </ion-refresher>
-  <div *ngIf="settings">
-    <div *ngIf="sunriseSettings">
 
+
+  <div *ngIf="settings">
+    <ion-item>
+      <ion-title>Label</ion-title>
+      <ion-input type="text" ngDefaultControl [(ngModel)]="settings.address" text-middle id="input">
+      </ion-input>
+    </ion-item>
+    <ion-item>
+      <ion-title>Time</ion-title>
+      <ion-input type="text" ngDefaultControl [(ngModel)]="currentTime" text-middle id="input">
+      </ion-input>
+    </ion-item>
+
+    <div *ngIf="sunriseSettings">
       <ion-item>
         <ion-label>Light Time</ion-label>
         <ion-input type="number" ngDefaultControl [(ngModel)]="sunriseSettings.SunriseLightTime" text-right id="input">
         </ion-input>
       </ion-item>
 
-      <ion-item>
-        <ion-label>Current Time</ion-label>
-        <ion-input slot="end" type="text" ngDefaultControl [(ngModel)]="currentTime" text-right id="input">
-        </ion-input>
-      </ion-item>
 
       <ion-item>
         <ion-label>Is Activated</ion-label>
@@ -112,7 +119,7 @@
           </ion-input>
         </ion-item>
       </div>
-      <div class="save_button">
+      <div *ngIf="enableSave" class="save_button">
         <ion-icon name="save" size="large" (click)="clickedSave()"></ion-icon>
       </div>
 
