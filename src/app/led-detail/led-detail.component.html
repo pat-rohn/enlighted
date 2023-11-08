@@ -3,6 +3,11 @@
         <ion-refresher-content></ion-refresher-content>
     </ion-refresher>
     <div *ngIf="ledStatus && settings">
+        <ion-item>
+            <ion-title>Device Name</ion-title>
+            <ion-input *ngIf="deviceSettings" type="text" ngDefaultControl [(ngModel)]="deviceSettings.SensorID" text-middle id="input">
+            </ion-input>
+          </ion-item>
         <div *ngIf="deviceSettings && deviceSettings.SunriseSettings && deviceSettings.SunriseSettings.IsActivated">
             <ion-item>
                 <ion-icon name="warning-outline" style="padding:30px"></ion-icon>
@@ -10,7 +15,6 @@
                 </ion-label>
             </ion-item>
         </div>
-
         <ion-range class="slider_brightness" (ionKnobMoveEnd)="onSliderChange($event)"
             [(ngModel)]="ledStatus.brightness" [pinFormatter]="pinFormatter" [pin]="true">
             <ion-icon slot="end" name="sunny-outline"></ion-icon>

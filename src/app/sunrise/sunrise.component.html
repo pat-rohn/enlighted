@@ -6,8 +6,8 @@
 
   <div *ngIf="settings">
     <ion-item>
-      <ion-title>Label</ion-title>
-      <ion-input type="text" ngDefaultControl [(ngModel)]="settings.address" text-middle id="input">
+      <ion-title>Device Name</ion-title>
+      <ion-input *ngIf="deviceSettings" type="text" ngDefaultControl [(ngModel)]="deviceSettings.SensorID" text-middle id="input">
       </ion-input>
     </ion-item>
     <ion-item>
