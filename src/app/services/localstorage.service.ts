@@ -26,17 +26,14 @@ export class LocalstorageService {
 
     console.log("Get settings");
     console.log(JSON.stringify(this.settings));
-    Preferences.get({ key: 'settings' }).then(
-      value => {
-        if (value != null) {
-          console.log("Replace settings");
-          let settingsStr = value.toString();
-          this.settings = JSON.parse(settingsStr);
-          console.log(JSON.stringify(value));
-        }
-      }).catch(
-        error => console.error(error)
-      );
+    const { value } = await Preferences.get({ key: 'settings' })
+    if (value != null) {
+      console.log("Replace settings");
+      let settingsStr = value.toString();
+      this.settings = JSON.parse(settingsStr);
+      console.log(JSON.stringify(value));
+    }
+
 
     //console.log(JSON.stringify(this.settings));
     if (this.settings.usedAddresses == null) {
