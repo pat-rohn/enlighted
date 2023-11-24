@@ -5,9 +5,10 @@
     <div *ngIf="ledStatus && settings">
         <ion-item>
             <ion-title>Device Name</ion-title>
-            <ion-input *ngIf="deviceSettings" type="text" ngDefaultControl [(ngModel)]="deviceSettings.SensorID" text-middle id="input">
+            <ion-input *ngIf="deviceSettings" type="text" ngDefaultControl [(ngModel)]="deviceSettings.SensorID"
+                text-middle id="input">
             </ion-input>
-          </ion-item>
+        </ion-item>
         <div *ngIf="deviceSettings && deviceSettings.SunriseSettings && deviceSettings.SunriseSettings.IsActivated">
             <ion-item>
                 <ion-icon name="warning-outline" style="padding:30px"></ion-icon>
@@ -15,54 +16,57 @@
                 </ion-label>
             </ion-item>
         </div>
-        <ion-range class="slider_brightness" (ionKnobMoveEnd)="onSliderChange($event)"
-            [(ngModel)]="ledStatus.brightness" [pinFormatter]="pinFormatter" [pin]="true">
-            <ion-icon slot="end" name="sunny-outline"></ion-icon>
-        </ion-range>
 
-        <ion-range class="slider_red" (ionKnobMoveEnd)="onSliderChange($event)" [(ngModel)]="ledStatus.red"
-            [pinFormatter]="pinFormatter" [pin]="true">
-            <ion-icon slot="end" name="sunny-outline"></ion-icon>
-        </ion-range>
+        <div *ngIf="deviceSettings && deviceSettings.SunriseSettings && !deviceSettings.SunriseSettings.IsActivated">
+            <ion-range [disabled]="!isReady" class="slider_brightness" (ionKnobMoveEnd)="onSliderChange($event)"
+                [(ngModel)]="ledStatus.brightness" [pinFormatter]="pinFormatter" [pin]="true">
+                <ion-icon slot="end" name="sunny-outline"></ion-icon>
+            </ion-range>
 
-        <ion-range class="slider_green" (ionKnobMoveEnd)="onSliderChange($event)" [(ngModel)]="ledStatus.green"
-            [pinFormatter]="pinFormatter" [pin]="true">
-            <ion-icon slot="end" name="sunny-outline"></ion-icon>
-        </ion-range>
+            <ion-range [disabled]="!isReady" class="slider_red" (ionKnobMoveEnd)="onSliderChange($event)"
+                [(ngModel)]="ledStatus.red" [pinFormatter]="pinFormatter" [pin]="true">
+                <ion-icon slot="end" name="sunny-outline"></ion-icon>
+            </ion-range>
 
-        <ion-range class="slider_blue" (ionKnobMoveEnd)="onSliderChange($event)" [(ngModel)]="ledStatus.blue"
-            [pinFormatter]="pinFormatter" [pin]="true">
-            <ion-icon slot="end" name="sunny-outline"></ion-icon>
-        </ion-range>
+            <ion-range [disabled]="!isReady" class="slider_green" (ionKnobMoveEnd)="onSliderChange($event)"
+                [(ngModel)]="ledStatus.green" [pinFormatter]="pinFormatter" [pin]="true">
+                <ion-icon slot="end" name="sunny-outline"></ion-icon>
+            </ion-range>
 
-        <div>
-            <mat-form-field appearance="fill">
-                <mat-label>Mode</mat-label>
-                <mat-select (selectionChange)="onSelectChange($event.value)" [(ngModel)]="ledStatus.mode"
-                    [compareWith]="compareFn">
-                    <mat-option *ngFor="let mode of ledModes" [value]="mode">
-                        {{mode.id}} {{mode.label}}
-                    </mat-option>
-                </mat-select>
-            </mat-form-field>
-            <br>
+            <ion-range [disabled]="!isReady" class="slider_blue" (ionKnobMoveEnd)="onSliderChange($event)"
+                [(ngModel)]="ledStatus.blue" [pinFormatter]="pinFormatter" [pin]="true">
+                <ion-icon slot="end" name="sunny-outline"></ion-icon>
+            </ion-range>
 
+            <div>
+                <mat-form-field appearance="fill">
+                    <mat-label>Mode</mat-label>
+                    <mat-select (selectionChange)="onSelectChange($event.value)" [(ngModel)]="ledStatus.mode"
+                        [compareWith]="compareFn">
+                        <mat-option *ngFor="let mode of ledModes" [value]="mode">
+                            {{mode.id}} {{mode.label}}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+                <br>
+
+            </div>
         </div>
         <hr>
         <div>
-            <ion-icon name="power" size="large" (click)="onPower()"></ion-icon>
-            <div *ngIf="ledStatus.mode.id==0">
-                <!-- on -->
-                <br>
-                <ion-icon name="repeat-outline" size="large" (click)="onChangeColor()" ></ion-icon>
-            </div>
+            <ion-button [disabled]="!isReady" (click)="onPower()">
+                <ion-icon name="power" slot="icon-only" size="large"></ion-icon>
+            </ion-button>
         </div>
-        <ion-item>
-        </ion-item>
+        <hr>
+        <div>
+            <ion-button [disabled]="!isReady" (click)="onChangeColor()">
+                <ion-icon name="repeat-outline" slot="icon-only" size="large"></ion-icon>
+            </ion-button>
+        </div>
+        <hr>
         <ion-item>
             <ion-label color="medium">{{ledStatus.message}}</ion-label>
         </ion-item>
-
-
     </div>
 </ion-content>

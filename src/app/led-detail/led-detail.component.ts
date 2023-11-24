@@ -12,6 +12,9 @@ import { LocalstorageService } from '../services/localstorage.service';
 })
 export class LedDetailComponent implements OnInit {
   ledStatusJson?: LEDStatusJSON;
+
+  isReady = true;
+
   ledStatus: LEDStatus = {
     red: 0,
     green: 0,
@@ -46,11 +49,12 @@ export class LedDetailComponent implements OnInit {
       this.ledcontrolService.getLedStatus().subscribe(
         {
           next: (ledJson) => {
-            console.log('Observer got a next value: ' + ledJson),
-              this.applyLEDStatus(ledJson);
+            console.log('Answer:' + JSON.stringify(ledJson));
+            this.applyLEDStatus(ledJson);
           },
           error: (error) => {
             console.error('Observer got an error: ' + error)
+            this.isReady = false;
           },
           complete: () => {
           }
@@ -74,6 +78,7 @@ export class LedDetailComponent implements OnInit {
 
   onSelectChange(value: LabeledLedMode): void {
     console.log("ion change");
+    this.isReady = false
     var mode = value;
     if (this.ledStatus) {
       console.log("change mode");
@@ -82,28 +87,63 @@ export class LedDetailComponent implements OnInit {
         console.log("mode not defined: " + value);
       }
       this.ledcontrolService.saveStatus(this.getJson())
-        .subscribe(() => console.log("save led detail component: select"));
+        .subscribe({
+          next: (ledJson) => {
+            console.log('Answer:' + JSON.stringify(ledJson));
+            this.isReady = true;
+          },
+          error: (error) => {
+            console.error('Observer got an error: ' + error)
+            this.ledStatus = {
+              red: 0,
+              green: 0,
+              blue: 0,
+              brightness: 0,
+              message: "No connection",
+              mode: LED_OFF
+            }
+          },
+        });
     }
   }
 
   onSave(): void {
     if (this.ledStatus) {
+      this.isReady = false;
       this.ledcontrolService.saveStatus(this.getJson())
-        .subscribe(() => console.log("save led detail component: save"));
+        .subscribe(
+          {
+            next: (ledJson) => {
+              console.log('Answer:' + JSON.stringify(ledJson));
+              this.isReady = true;
+            },
+            error: (error) => {
+              console.error('Observer got an error: ' + error)
+              this.ledStatus = {
+                red: 0,
+                green: 0,
+                blue: 0,
+                brightness: 0,
+                message: "No connection",
+                mode: LED_OFF
+              }
+            },
+          }
+        );
     }
   }
 
   onPower(): void {
+    this.isReady = false
     if (this.ledStatus) {
-      if (this.ledStatus.mode == LED_OFF) {
-        this.ledStatus.mode = LED_ON;
-        console.log("Power button: ON");
-      } else {
+      if (this.ledStatus.mode != LED_OFF) {
         this.ledStatus.mode = LED_OFF;
-        console.log("Power button: OFF");
+        console.log("Power button: turn off");
+      } else {
+        this.ledStatus.mode = LED_ON;
+        console.log("Power button: turn on");
       }
-      this.ledcontrolService.saveStatus(this.getJson())
-        .subscribe(() => console.log("Power button: " + JSON.stringify(this.ledModes)));
+     this.onSave();
     }
   }
 
@@ -111,18 +151,20 @@ export class LedDetailComponent implements OnInit {
     this.onRefresh().then(_ => {
       console.log("handle Refresher complete")
       event.target.complete()
+      this.isReady = true;
     }
     )
   };
 
   async onRefresh() {
+    this.isReady = false
     this.ledcontrolService.getDeviceSettings().subscribe(res => {
       this.deviceSettings = res
       this.ledcontrolService.getLedStatus().subscribe(
         {
           next: (ledJson) => {
-            console.log('Observer got a next value: ' + ledJson),
-              this.applyLEDStatus(ledJson);
+            console.log('Answer:' + JSON.stringify(ledJson));
+            this.isReady = true
           },
           error: (error) => {
             console.error('Observer got an error: ' + error)
@@ -143,6 +185,7 @@ export class LedDetailComponent implements OnInit {
   }
 
   onChangeColor() {
+    this.isReady = false;
     this.ledcontrolService.getLedStatus()
       .subscribe(ledstatus => {
         let color = Math.floor(Math.random() * 6)
@@ -201,7 +244,6 @@ export class LedDetailComponent implements OnInit {
   }
 
   applyLEDStatus(jsonStatus: LEDStatusJSON) {
-    var mode: LabeledLedMode = { label: "on", id: (jsonStatus.Mode) };
     if (this.ledStatus == null) {
       this.ledStatus = {
         red: jsonStatus.Red,
@@ -218,9 +260,9 @@ export class LedDetailComponent implements OnInit {
       this.ledStatus.red = jsonStatus.Red;
       this.ledStatus.green = jsonStatus.Green;
       this.ledStatus.blue = jsonStatus.Blue;
+      this.ledStatus.mode.id = jsonStatus.Mode;
 
     }
-    this.ledStatus.mode = mode;
     console.log("Mode:" + this.ledStatus.mode.id);
   }
 
