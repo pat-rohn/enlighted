@@ -49,14 +49,14 @@ export class LedcontrolService {
   saveStatus(ledstatus: LEDStatusJSON): Observable<any> {
     let url = "http://" + this.ipAddress + "/api/led"
     console.log('get led status from:' + url);
-    console.log(`Save: ` + ledstatus.Message + "mode: " + ledstatus.Mode + " Colors:[" +
+    console.log(`Save: ` + ledstatus.Message + " mode: " + ledstatus.Mode + " Colors:[" +
       ledstatus.Brightness +
       "," + ledstatus.Red +
       "," + ledstatus.Green +
       "," + ledstatus.Blue +
       "]")
     return this.http.post(url, ledstatus, this.httpOptions).pipe(
-      tap(_ => console.log(`updated led` + ledstatus.Message)),
+      tap(_ => console.log(`updated led ` + ledstatus.Message)),
       catchError(this.handleError<any>('saveStatus'))
     );
   }

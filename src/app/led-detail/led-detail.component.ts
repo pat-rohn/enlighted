@@ -114,7 +114,7 @@ export class LedDetailComponent implements OnInit {
         .subscribe(
           {
             next: (ledJson) => {
-              console.log('Answer:' + JSON.stringify(ledJson));
+              console.log('Answer: ' + JSON.stringify(ledJson));
               this.isReady = true;
             },
             error: (error) => {
@@ -143,7 +143,7 @@ export class LedDetailComponent implements OnInit {
         this.ledStatus.mode = LED_ON;
         console.log("Power button: turn on");
       }
-     this.onSave();
+      this.onSave();
     }
   }
 
@@ -260,10 +260,32 @@ export class LedDetailComponent implements OnInit {
       this.ledStatus.red = jsonStatus.Red;
       this.ledStatus.green = jsonStatus.Green;
       this.ledStatus.blue = jsonStatus.Blue;
-      this.ledStatus.mode.id = jsonStatus.Mode;
+      switch (jsonStatus.Mode) {
+        case LEDMode.on:
+          this.ledStatus.mode = LED_ON;
+          break
+        case LEDMode.off:
+          this.ledStatus.mode = LED_OFF;
+          break
+        case LEDMode.campfire:
+          this.ledStatus.mode = LED_CAMPFIRE;
+          break
+        case LEDMode.colorful:
+          this.ledStatus.mode = LED_COLORS;
+          break
+        case LEDMode.pulse:
+          this.ledStatus.mode = LED_PULSE;
+          break
+        case LEDMode.sunrise:
+          this.ledStatus.mode = LED_SUNRISE;
+          break
+        default:
+          this.ledStatus.mode = LED_OFF;
+          break
+      }
 
     }
-    console.log("Mode:" + this.ledStatus.mode.id);
+    console.log("Mode: " + this.ledStatus.mode.id);
   }
 
   getJson(): LEDStatusJSON {
