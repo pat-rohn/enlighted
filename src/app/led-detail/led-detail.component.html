@@ -17,7 +17,7 @@
             </ion-item>
         </div>
 
-        <div *ngIf="deviceSettings && deviceSettings.SunriseSettings && !deviceSettings.SunriseSettings.IsActivated">
+        <div *ngIf="deviceSettings && deviceSettings.SunriseSettings">
             <ion-range [disabled]="!isReady" class="slider_brightness" (ionKnobMoveEnd)="onSliderChange($event)"
                 [(ngModel)]="ledStatus.brightness" [pinFormatter]="pinFormatter" [pin]="true">
                 <ion-icon slot="end" name="sunny-outline"></ion-icon>
@@ -38,7 +38,7 @@
                 <ion-icon slot="end" name="sunny-outline"></ion-icon>
             </ion-range>
 
-            <div>
+            <div *ngIf="!deviceSettings.SunriseSettings.IsActivated">
                 <mat-form-field appearance="fill">
                     <mat-label>Mode</mat-label>
                     <mat-select (selectionChange)="onSelectChange($event.value)" [(ngModel)]="ledStatus.mode"
