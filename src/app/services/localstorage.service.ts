@@ -13,7 +13,7 @@ export class LocalstorageService {
   settings: Settings = {
     ledstatus: DEFAULT_LED_STATUS,
     address: "192.168.4.1",
-    usedAddresses: ["192.168.4.1", "192.168.1.142"],
+    usedAddresses: ["192.168.4.1"],
   };
 
   constructor(
@@ -37,7 +37,7 @@ export class LocalstorageService {
 
     //console.log(JSON.stringify(this.settings));
     if (this.settings.usedAddresses == null) {
-      this.settings.usedAddresses = ["192.168.4.1", "192.168.1.142"];
+      this.settings.usedAddresses = ["192.168.4.1"];
     }
     console.log(JSON.stringify(this.settings.usedAddresses));
 
