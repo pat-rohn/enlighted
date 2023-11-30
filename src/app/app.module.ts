@@ -18,7 +18,6 @@ import { SunriseModule } from './sunrise/sunrise.module';
 
 @NgModule({
   declarations: [AppComponent],
-  entryComponents: [],
   imports: [BrowserModule,
     IonicModule.forRoot(),
     AppRoutingModule,
