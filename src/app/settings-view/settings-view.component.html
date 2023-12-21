@@ -32,25 +32,25 @@
         <div *ngIf="deviceSettings">
             <ion-item>
                 <ion-label>Device Name</ion-label>
-                <ion-input slot="end" type="text" ngDefaultControl [(ngModel)]="deviceSettings.SensorID" text-right
+                <ion-input slot="end" label="" type="text" ngDefaultControl [(ngModel)]="deviceSettings.SensorID" text-right
                     id="input">
                 </ion-input>
             </ion-item>
             <ion-item>
                 <ion-label>ServerAddress</ion-label>
-                <ion-input slot="end" type="text" ngDefaultControl [(ngModel)]="deviceSettings.ServerAddress" text-right
+                <ion-input slot="end" type="text" label="" ngDefaultControl [(ngModel)]="deviceSettings.ServerAddress" text-right
                     id="input">
                 </ion-input>
             </ion-item>
             <ion-item>
                 <ion-label>WiFiName</ion-label>
-                <ion-input slot="end" type="text" ngDefaultControl [(ngModel)]="deviceSettings.WiFiName" text-right
+                <ion-input slot="end" type="text" label="" ngDefaultControl [(ngModel)]="deviceSettings.WiFiName" text-right
                     id="input">
                 </ion-input>
             </ion-item>
             <ion-item>
                 <ion-label>WiFiPassword</ion-label>
-                <ion-input slot="end" type="password" ngDefaultControl [(ngModel)]="deviceSettings.WiFiPassword"
+                <ion-input slot="end" type="password" label="" ngDefaultControl [(ngModel)]="deviceSettings.WiFiPassword"
                     text-right id="input">
                 </ion-input>
             </ion-item>
@@ -76,49 +76,48 @@
 
             <ion-item>
                 <ion-label>DhtPin</ion-label>
-                <ion-input slot="end" type="number" ngDefaultControl [(ngModel)]="deviceSettings.DhtPin" text-right
+                <ion-input slot="end" type="number" label="" ngDefaultControl [(ngModel)]="deviceSettings.DhtPin" text-right
                     id="input">
                 </ion-input>
             </ion-item>
             <ion-item>
                 <ion-label>WindSensorPin</ion-label>
-                <ion-input slot="end" type="number" ngDefaultControl [(ngModel)]="deviceSettings.WindSensorPin"
+                <ion-input slot="end" type="number" label="" ngDefaultControl [(ngModel)]="deviceSettings.WindSensorPin"
                     text-right id="input">
                 </ion-input>
             </ion-item>
             <ion-item>
                 <ion-label>RainfallSensorPin</ion-label>
-                <ion-input slot="end" type="number" ngDefaultControl [(ngModel)]="deviceSettings.RainfallSensorPin"
+                <ion-input slot="end" type="number" label="" ngDefaultControl [(ngModel)]="deviceSettings.RainfallSensorPin"
                     text-right id="input"></ion-input>
             </ion-item>
             <ion-item>
                 <ion-label>LEDPin</ion-label>
-                <ion-input slot="end" type="number" ngDefaultControl [(ngModel)]="deviceSettings.LEDPin" text-right
+                <ion-input slot="end" type="number" label="" ngDefaultControl [(ngModel)]="deviceSettings.LEDPin" text-right
                     id="input">
                 </ion-input>
             </ion-item>
             <ion-item>
                 <ion-label>Button1</ion-label>
-                <ion-input slot="end" type="number" ngDefaultControl [(ngModel)]="deviceSettings.Button1" text-right
+                <ion-input slot="end" type="number" label="" ngDefaultControl [(ngModel)]="deviceSettings.Button1" text-right
                     id="input">
                 </ion-input>
             </ion-item>
             <ion-item>
                 <ion-label>Button2</ion-label>
-                <ion-input slot="end" type="number" ngDefaultControl [(ngModel)]="deviceSettings.Button2" text-right
+                <ion-input slot="end" type="number" label="" ngDefaultControl [(ngModel)]="deviceSettings.Button2" text-right
                     id="input">
                 </ion-input>
             </ion-item>
             <ion-item>
                 <ion-label>NumberOfLEDs</ion-label>
-                <ion-input slot="end" type="number" ngDefaultControl [(ngModel)]="deviceSettings.NumberOfLEDs"
+                <ion-input slot="end" type="number" label="" ngDefaultControl [(ngModel)]="deviceSettings.NumberOfLEDs"
                     text-right id="input">
                 </ion-input>
             </ion-item>
             <div class="save_button">
                 <ion-icon name="save" size="large" (click)="clickedApplyDeviceSettings()"></ion-icon>
             </div>
-
         </div>
     </div>
 <ion-content>

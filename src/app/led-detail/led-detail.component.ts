@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 
+import { ActivatedRoute } from '@angular/router'
 import { LedcontrolService } from '../services/ledcontrol.service';
 import { LEDStatus, LEDStatusJSON, LabeledLedMode, LED_ON, LED_OFF, LED_PULSE, LED_CAMPFIRE, LED_COLORS, LED_SUNRISE, LEDMode } from '../ledstatus';
 import { Settings, DeviceSettings } from '../settings'
@@ -36,7 +37,14 @@ export class LedDetailComponent implements OnInit {
   ];
 
   constructor(private ledcontrolService: LedcontrolService,
-    private localStorage: LocalstorageService) {
+    private localStorage: LocalstorageService,
+    private activeRoute: ActivatedRoute) {
+    this.activeRoute.params.subscribe(params => {
+      console.log(JSON.stringify(params));
+      //if (params["id"] == "LedDetails") {
+        this.onRefresh();
+      //}
+    });
   }
 
   async ngOnInit() {

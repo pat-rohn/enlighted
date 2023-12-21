@@ -7,19 +7,20 @@
   <div *ngIf="settings">
     <ion-item>
       <ion-title>Device Name</ion-title>
-      <ion-input *ngIf="deviceSettings" type="text" ngDefaultControl [(ngModel)]="deviceSettings.SensorID" text-middle id="input">
+      <ion-input *ngIf="deviceSettings" type="text" label="" ngDefaultControl [(ngModel)]="deviceSettings.SensorID" text-middle
+        id="input">
       </ion-input>
     </ion-item>
     <ion-item>
       <ion-title>Time</ion-title>
-      <ion-input type="text" ngDefaultControl [(ngModel)]="currentTime" text-middle id="input">
+      <ion-input type="text" label="" ngDefaultControl [(ngModel)]="currentTime" text-middle id="input">
       </ion-input>
     </ion-item>
 
     <div *ngIf="sunriseSettings">
       <ion-item>
-        <ion-label>Light Time</ion-label>
-        <ion-input type="number" ngDefaultControl [(ngModel)]="sunriseSettings.SunriseLightTime" text-right id="input">
+        <ion-input type="number" label="Light Time" ngDefaultControl [(ngModel)]="sunriseSettings.SunriseLightTime"
+          text-right id="input">
         </ion-input>
       </ion-item>
 
@@ -36,7 +37,7 @@
       </ion-item>
       <div *ngIf="sunriseSettings.Monday.IsActive">
         <ion-item>
-          <ion-input type="text" slot="end" ngDefaultControl [(ngModel)]="sunriseSettings.Monday.AlarmTime" text-right
+          <ion-input type="text" label="" slot="end" ngDefaultControl [(ngModel)]="sunriseSettings.Monday.AlarmTime" text-right
             id="input">
           </ion-input>
         </ion-item>
@@ -49,7 +50,7 @@
       </ion-item>
       <div *ngIf="sunriseSettings.Tuesday.IsActive">
         <ion-item>
-          <ion-input type="text" slot="end" ngDefaultControl [(ngModel)]="sunriseSettings.Tuesday.AlarmTime" text-right
+          <ion-input type="text" label="" slot="end" ngDefaultControl [(ngModel)]="sunriseSettings.Tuesday.AlarmTime" text-right
             id="input">
           </ion-input>
         </ion-item>
@@ -61,7 +62,7 @@
       </ion-item>
       <div *ngIf="sunriseSettings.Wednesday.IsActive">
         <ion-item>
-          <ion-input type="text" slot="end" ngDefaultControl [(ngModel)]="sunriseSettings.Wednesday.AlarmTime"
+          <ion-input type="text" label="" slot="end" ngDefaultControl [(ngModel)]="sunriseSettings.Wednesday.AlarmTime"
             text-right id="input">
           </ion-input>
         </ion-item>
@@ -73,7 +74,7 @@
       </ion-item>
       <div *ngIf="sunriseSettings.Thursday.IsActive">
         <ion-item>
-          <ion-input type="text" slot="end" ngDefaultControl [(ngModel)]="sunriseSettings.Thursday.AlarmTime" text-right
+          <ion-input type="text" label="" slot="end" ngDefaultControl [(ngModel)]="sunriseSettings.Thursday.AlarmTime" text-right
             id="input">
           </ion-input>
         </ion-item>
@@ -86,7 +87,7 @@
       <div *ngIf="sunriseSettings.Friday.IsActive">
         <ion-item>
           <ion-label></ion-label>
-          <ion-input type="text" slot="end" ngDefaultControl [(ngModel)]="sunriseSettings.Friday.AlarmTime" text-right
+          <ion-input type="text" label="" slot="end" ngDefaultControl [(ngModel)]="sunriseSettings.Friday.AlarmTime" text-right
             id="input">
           </ion-input>
         </ion-item>
@@ -100,7 +101,7 @@
       <div *ngIf="sunriseSettings.Saturday.IsActive">
         <ion-item>
           <ion-label></ion-label>
-          <ion-input type="text" slot="end" ngDefaultControl [(ngModel)]="sunriseSettings.Saturday.AlarmTime" text-right
+          <ion-input type="text" label="" slot="end" ngDefaultControl [(ngModel)]="sunriseSettings.Saturday.AlarmTime" text-right
             id="input">
           </ion-input>
         </ion-item>
@@ -114,7 +115,7 @@
       <div *ngIf="sunriseSettings.Sunday.IsActive">
         <ion-item>
           <ion-label></ion-label>
-          <ion-input type="text" slot="end" ngDefaultControl [(ngModel)]="sunriseSettings.Sunday.AlarmTime" text-right
+          <ion-input type="text" label="" slot="end" ngDefaultControl [(ngModel)]="sunriseSettings.Sunday.AlarmTime" text-right
             id="input">
           </ion-input>
         </ion-item>

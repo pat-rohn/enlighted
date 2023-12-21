@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { DeviceSettings, Settings } from '../settings'
 import { LocalstorageService } from '../services/localstorage.service'
 import { LedcontrolService } from '../services/ledcontrol.service';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-settings-view',
@@ -15,7 +16,15 @@ export class SettingsViewComponent implements OnInit {
 
   constructor(
     private localStorage: LocalstorageService,
-    private ledcontrolService: LedcontrolService) { }
+    private ledcontrolService: LedcontrolService,
+    private activeRoute: ActivatedRoute) {
+    this.activeRoute.params.subscribe(params => {
+      console.log(params["id"]);
+      //if (params["id"] == "Settings") {
+        this.clickedRefreshDevice();
+      //}
+    });
+  }
 
   async ngOnInit() {
     console.log("init view comp");
@@ -70,7 +79,7 @@ export class SettingsViewComponent implements OnInit {
           if (res != null) {
             console.log("Succesful connected to " + res.SensorID)
             this.settings!.address = event.target.value
-            this.onSave() 
+            this.onSave()
           } else { // todo improve
             console.error('Failed to connect to : ' + deviceAddress)
           }

@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { DeviceSettings, SunriseSettings, DaySetting, Settings } from '../settings'
 import { LocalstorageService } from '../services/localstorage.service'
 import { LedcontrolService } from '../services/ledcontrol.service';
+import { ActivatedRoute } from '@angular/router';
 
 
 @Component({
@@ -20,7 +21,15 @@ export class SunriseComponent implements OnInit {
 
   constructor(
     private localStorage: LocalstorageService,
-    private ledcontrolService: LedcontrolService) { }
+    private ledcontrolService: LedcontrolService,
+    private activatedRoute: ActivatedRoute) { 
+      this.activatedRoute.params.subscribe(params => {
+        console.log(params["id"]);
+        //if (params["id"] == "Sunrise") {
+          this.clickedRefresh();
+        //}
+      });
+    }
 
 
 
