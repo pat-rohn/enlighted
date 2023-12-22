@@ -26,7 +26,9 @@ export class SunriseComponent implements OnInit {
       this.activatedRoute.params.subscribe(params => {
         console.log(params["id"]);
         //if (params["id"] == "Sunrise") {
-          this.clickedRefresh();
+          if (this.deviceSettings != null) {
+            this.clickedRefresh();
+          }
         //}
       });
     }

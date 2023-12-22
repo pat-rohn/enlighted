@@ -42,7 +42,9 @@ export class LedDetailComponent implements OnInit {
     this.activeRoute.params.subscribe(params => {
       console.log(JSON.stringify(params));
       //if (params["id"] == "LedDetails") {
-        this.onRefresh();
+        if (this.deviceSettings != null) {
+          this.onRefresh();
+        }
       //}
     });
   }

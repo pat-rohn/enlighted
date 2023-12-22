@@ -42,5 +42,8 @@ export interface DeviceSettings {
   FindSensors: boolean;
   IsOfflineMode: boolean;
   ShowWebpage: boolean;
+  UseMQTT: boolean;
+  MQTTTopic: string;
+  MQTTPort: number;
   SunriseSettings: SunriseSettings;
 }
