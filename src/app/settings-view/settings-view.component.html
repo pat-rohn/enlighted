@@ -31,9 +31,6 @@
         (ionBlur)="newDevice($event)"
       ></ion-input>
     </ion-item>
-    <div class="save_button">
-      <ion-icon name="save" size="large" (click)="onSave()"></ion-icon>
-    </div>
     <ion-item lines="inset">
       <ion-title>Device Settings</ion-title>
     </ion-item>
@@ -238,12 +235,12 @@
         >
         </ion-input>
       </ion-item>
-      <div class="save_button">
-        <ion-icon
-          name="save"
-          size="large"
-          (click)="clickedApplyDeviceSettings()"
-        ></ion-icon>
+      <div class="save_button" *ngIf="enableSave">
+          <ion-icon
+            name="save"
+            size="large"
+            (click)="clickedApplyDeviceSettings()"
+          ></ion-icon>
       </div>
     </div>
   </div>

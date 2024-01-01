@@ -13,6 +13,7 @@ export class SettingsViewComponent implements OnInit {
 
   settings?: Settings;
   deviceSettings?: DeviceSettings;
+  enableSave = true;
 
   constructor(
     private localStorage: LocalstorageService,
@@ -52,19 +53,29 @@ export class SettingsViewComponent implements OnInit {
     this.ledcontrolService.setIpAddress(this.settings!.address)
     this.clickedRefreshDevice().then(_ => {
       console.log("handle Refresher complete")
+      this.enableSave = true;
       event.target.complete()
     })
   };
 
+
   async clickedRefreshDevice() {
-    this.ledcontrolService.getDeviceSettings().subscribe(res => {
-      this.deviceSettings = res
-      console.log(JSON.stringify(res))
+    console.log("Disable Save")
+    this.enableSave = false;
+    this.ledcontrolService.getDeviceSettings().subscribe({
+      next: res => {
+        this.deviceSettings = res;
+        this.enableSave = true;
+        console.log("Enable Save")
+      },
+      error: err => console.log(err),
     }
     );
   }
 
   async clickedApplyDeviceSettings() {
+    console.log("Disable Save")
+    this.enableSave = false;
     console.log(JSON.stringify(this.deviceSettings))
     this.ledcontrolService.applyDeviceSettings(this.deviceSettings!).subscribe(_ => {
       this.ledcontrolService.getDeviceSettings().subscribe(res => this.deviceSettings = res);
