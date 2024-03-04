@@ -174,6 +174,7 @@ export class LedDetailComponent implements OnInit {
         {
           next: (ledJson) => {
             console.log('Answer:' + JSON.stringify(ledJson));
+            this.applyLEDStatus(ledJson);
             this.isReady = true
           },
           error: (error) => {
