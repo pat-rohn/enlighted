@@ -13,6 +13,12 @@ export interface DaySetting {
   IsActive: boolean;
 }
 
+export interface Light {
+  Red: number
+  Green: number
+  Blue: number
+}
+
 export interface SunriseSettings {
   IsActivated: boolean;
   SunriseLightTime: number;
@@ -38,6 +44,7 @@ export interface DeviceSettings {
   LEDPin: number;
   Button1: number;
   Button2: number;
+  Button2GetURL: string
   NumberOfLEDs: number;
   FindSensors: boolean;
   IsOfflineMode: boolean;
@@ -46,4 +53,7 @@ export interface DeviceSettings {
   MQTTTopic: string;
   MQTTPort: number;
   SunriseSettings: SunriseSettings;
+  LightLow: Light;
+  LightMedium: Light;
+  LightHigh: Light;
 }

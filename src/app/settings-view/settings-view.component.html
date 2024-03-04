@@ -137,6 +137,19 @@
         >
         </ion-input>
       </ion-item>
+      <ion-item *ngIf="deviceSettings.Button2 > 0">
+        <ion-label>Button2GetURL</ion-label>
+        <ion-input
+          slot="end"
+          type="text"
+          label=""
+          ngDefaultControl
+          [(ngModel)]="deviceSettings.Button2GetURL"
+          text-right
+          id="input"
+        >
+        </ion-input>
+      </ion-item>
       <ion-item>
         <ion-label>NumberOfLEDs</ion-label>
         <ion-input
@@ -236,11 +249,11 @@
         </ion-input>
       </ion-item>
       <div class="save_button" *ngIf="enableSave">
-          <ion-icon
-            name="save"
-            size="large"
-            (click)="clickedApplyDeviceSettings()"
-          ></ion-icon>
+        <ion-icon
+          name="save"
+          size="large"
+          (click)="clickedApplyDeviceSettings()"
+        ></ion-icon>
       </div>
     </div>
   </div>
