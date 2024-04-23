@@ -6,14 +6,14 @@ import { catchError, timeout, tap, switchMap } from 'rxjs/operators';
 import { LEDStatus, LEDStatusJSON } from '../ledstatus';
 import { DEFAULT_LED_STATUS } from '../ledstatus-mockup';
 import { ToastController } from '@ionic/angular';
-import { DeviceSettings } from '../settings';
+import { DeviceSettings, Device } from '../settings';
 
 
 @Injectable({
   providedIn: 'root'
 })
 export class LedcontrolService {
-  ipAddress?: string;
+  currentDevice?: Device;
   ledStatus: LEDStatus;
 
 
@@ -30,12 +30,13 @@ export class LedcontrolService {
     console.log('led message ' + this.ledStatus.message);
   }
 
-  public setIpAddress(address: string) {
-    this.ipAddress = address;
+  public setDevice(currentDevice: Device) {
+    this.currentDevice = currentDevice;
+    console.log('ledcontrol:set device' + JSON.stringify(this.currentDevice));
   }
 
   getLedStatus(): Observable<LEDStatusJSON> {
-    let url = "http://" + this.ipAddress + "/api/led"
+    let url = "http://" + this.currentDevice?.Address + "/api/led"
     console.log('get led status from:' + url);
     if (this.useDummy) {
       url = "assets/ledstatus.json";
@@ -47,7 +48,7 @@ export class LedcontrolService {
   }
 
   saveStatus(ledstatus: LEDStatusJSON): Observable<any> {
-    let url = "http://" + this.ipAddress + "/api/led"
+    let url = "http://" + this.currentDevice?.Address + "/api/led"
     console.log('get led status from:' + url);
     console.log(`Save: ` + ledstatus.Message + " mode: " + ledstatus.Mode + " Colors:[" +
       ledstatus.Brightness +
@@ -62,7 +63,7 @@ export class LedcontrolService {
   }
 
   getDeviceSettings(): Observable<DeviceSettings> {
-    let url = "http://" + this.ipAddress + "/api/config"
+    let url = "http://" + this.currentDevice?.Address + "/api/config"
     console.log('get device settings from:' + url);
     if (this.useDummy) {
       url = "assets/device-settings.json";
@@ -76,7 +77,7 @@ export class LedcontrolService {
 
   getTime(): Observable<string> {
 
-    let url = "http://" + this.ipAddress + "/api/time"
+    let url = "http://" + this.currentDevice?.Address + "/api/time"
     console.log('get device settings from:' + url);
     if (this.useDummy) {
       url = "assets/time.txt";
@@ -89,7 +90,7 @@ export class LedcontrolService {
 
 
   applyDeviceSettings(deviceSettings: DeviceSettings): Observable<any> {
-    let url = "http://" + this.ipAddress + "/api/config"
+    let url = "http://" + this.currentDevice?.Address + "/api/config"
     console.log('get device settings from :' + url);
     console.log(`Apply: ` + JSON.stringify(deviceSettings))
     return this.http.post(url, deviceSettings, this.httpOptions).pipe(

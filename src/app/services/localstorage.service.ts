@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Preferences } from '@capacitor/preferences';
-import { Settings } from '../settings'
+import { Settings, Device } from '../settings';
 import { DEFAULT_LED_STATUS } from '../ledstatus-mockup';
 import { LedcontrolService } from './ledcontrol.service'
 
@@ -10,10 +10,11 @@ import { LedcontrolService } from './ledcontrol.service'
 })
 export class LocalstorageService {
 
+  settingKey = "settings-new"
   settings: Settings = {
-    ledstatus: DEFAULT_LED_STATUS,
-    address: "192.168.4.1",
-    usedAddresses: ["192.168.4.1"],
+    Ledstatus: DEFAULT_LED_STATUS,
+    CurrentDevice: { Name: "Default", Address: "192.168.4.1" },
+    KnownDevices: [{ Name: "Default", Address: "192.168.4.1" }]
   };
 
   constructor(
@@ -22,31 +23,35 @@ export class LocalstorageService {
     console.log("Storage Service");
   }
 
-  async getSettings() {
-
-    console.log("Get settings");
+  async readSettings() {
+    console.log("read settings");
     console.log(JSON.stringify(this.settings));
-    const { value } = await Preferences.get({ key: 'settings' })
+    const { value } = await Preferences.get({ key: this.settingKey })
     if (value != null) {
-      console.log("Replace settings");
       let settingsStr = value.toString();
       this.settings = JSON.parse(settingsStr);
-      console.log(JSON.stringify(value));
+      console.log("Replace settings" + settingsStr);
     }
-
 
     //console.log(JSON.stringify(this.settings));
-    if (this.settings.usedAddresses == null) {
-      this.settings.usedAddresses = ["192.168.4.1"];
+    if (this.settings.KnownDevices == null) {
+      this.settings.KnownDevices = [{ Name: "Default", Address: "192.168.4.1" }];
     }
-    console.log(JSON.stringify(this.settings.usedAddresses));
+    console.log("get settings" + JSON.stringify(this.settings.CurrentDevice));
 
+    return this.settings;
+    //console.log(JSON.stringify(this.settings));
+
+  }
+
+  async writeSettings(settings: Settings) {
+    console.log("write settings:" + JSON.stringify(this.settings));
+    await Preferences.set({ key: this.settingKey, value: JSON.stringify(settings) })
+    this.ledControlService.setDevice(this.settings.CurrentDevice);
+  }
+
+  getSettings() {
     return this.settings;
   }
 
-  async setSettings(settings: Settings) {
-    console.log("Store settings:" + JSON.stringify(this.settings));
-    await Preferences.set({ key: 'settings', value: JSON.stringify(settings) })
-    this.ledControlService.setIpAddress(this.settings.address);
-  }
 }

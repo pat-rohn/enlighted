@@ -2,10 +2,15 @@
 
 import { LEDStatus } from './ledstatus';
 
+export interface Device {
+  Address: string;
+  Name: string;
+}
+
 export interface Settings {
-  ledstatus: LEDStatus;
-  address: string;
-  usedAddresses: string[];
+  Ledstatus: LEDStatus;
+  CurrentDevice: Device;
+  KnownDevices: Device[];
 }
 
 export interface DaySetting {

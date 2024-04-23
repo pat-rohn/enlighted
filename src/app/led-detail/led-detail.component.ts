@@ -50,10 +50,9 @@ export class LedDetailComponent implements OnInit {
   }
 
   async ngOnInit() {
-
     console.log("On init");
-    this.settings = await this.localStorage.getSettings();
-    this.ledcontrolService.setIpAddress(this.settings.address);
+    this.settings = await this.localStorage.readSettings();
+    this.ledcontrolService.setDevice(this.settings.CurrentDevice);
     this.ledcontrolService.getDeviceSettings().subscribe(res => {
       this.deviceSettings = res
       this.ledcontrolService.getLedStatus().subscribe(

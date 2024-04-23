@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { DeviceSettings, Settings } from '../settings'
+import { DeviceSettings, Settings, Device } from '../settings';
 import { LocalstorageService } from '../services/localstorage.service'
 import { LedcontrolService } from '../services/ledcontrol.service';
 import { ActivatedRoute } from '@angular/router';
@@ -11,8 +11,9 @@ import { ActivatedRoute } from '@angular/router';
 })
 export class SettingsViewComponent implements OnInit {
 
-  settings?: Settings;
-  deviceSettings?: DeviceSettings;
+  settings: Settings = this.localStorage.settings;
+  connectedDevice: Device = { Name: "init", Address: "0" }
+  deviceConfig?: DeviceSettings;
   enableSave = true;
 
   constructor(
@@ -22,7 +23,7 @@ export class SettingsViewComponent implements OnInit {
     this.activeRoute.params.subscribe(params => {
       console.log(params["id"]);
       //if (params["id"] == "Settings") {
-      if (this.deviceSettings != null) {
+      if (this.deviceConfig != null) {
         this.clickedRefreshDevice();
       }
       //}
@@ -31,30 +32,38 @@ export class SettingsViewComponent implements OnInit {
 
   async ngOnInit() {
     console.log("init view comp");
-    await this.localStorage.getSettings().then(
+    await this.localStorage.readSettings().then(
       res => {
         this.settings = res
-        this.ledcontrolService.setIpAddress(this.settings.address)
-        this.ledcontrolService.getDeviceSettings().subscribe(res => this.deviceSettings = res);
+        this.ledcontrolService.setDevice(res.CurrentDevice)
+        this.connectedDevice = Object.assign({}, res.CurrentDevice!)
+        this.ledcontrolService.getDeviceSettings().subscribe(res => {
+          this.deviceConfig = res
+        }
+        );
       }
     );
   }
 
-  async onSave() {
-    console.log("Save address " + this.settings!.address)
-    if (this.settings!.usedAddresses.findIndex(element => element == this.settings!.address) < 0) {
-      this.settings!.usedAddresses.push(this.settings!.address)
-    }
-    this.ledcontrolService.setIpAddress(this.settings!.address)
-    this.localStorage.setSettings(this.settings!).then(_ => this.clickedRefreshDevice())
+  async onSelect() {
+    let dev = this.findDevice(this.connectedDevice.Name)
+    this.settings!.CurrentDevice = Object.assign({}, dev!)
+    console.error("onSave: current Device " + JSON.stringify(this.connectedDevice))
+    this.ledcontrolService.setDevice(dev!)
+    this.clickedRefreshDevice()
+  }
+
+  compareDevice(o1: Device, o2: Device) {
+    return o1.Name && o2.Name ? o1.Name === o2.Name : o1.Name === o2.Name;
   }
 
   handleRefresh(event: any) {
-    this.ledcontrolService.setIpAddress(this.settings!.address)
     this.clickedRefreshDevice().then(_ => {
       console.log("handle Refresher complete")
       this.enableSave = true;
       event.target.complete()
+
+      this.ledcontrolService.setDevice(this.settings!.CurrentDevice)
     })
   };
 
@@ -64,7 +73,7 @@ export class SettingsViewComponent implements OnInit {
     this.enableSave = false;
     this.ledcontrolService.getDeviceSettings().subscribe({
       next: res => {
-        this.deviceSettings = res;
+        this.deviceConfig = res;
         this.enableSave = true;
         console.log("Enable Save")
       },
@@ -73,22 +82,22 @@ export class SettingsViewComponent implements OnInit {
     );
   }
 
-  async clickedApplyDeviceSettings() {
+  async clickedApplyDeviceConfig() {
     console.log("Disable Save")
     this.enableSave = false;
-    console.log(JSON.stringify(this.deviceSettings))
-    this.ledcontrolService.applyDeviceSettings(this.deviceSettings!).subscribe(_ => {
-      this.ledcontrolService.getDeviceSettings().subscribe(res => this.deviceSettings = res);
+    console.log(JSON.stringify(this.deviceConfig))
+    this.ledcontrolService.applyDeviceSettings(this.deviceConfig!).subscribe(_ => {
+      this.ledcontrolService.getDeviceSettings().subscribe(res => this.deviceConfig = res);
     });
   }
 
   async resetWiFi() {
-    if (this.deviceSettings != null) {
-      this.deviceSettings.IsConfigured = false;
-      this.deviceSettings.ServerAddress = "http://localhost:3000";
-      this.deviceSettings.WiFiName = "Enlighted";
-      this.deviceSettings.WiFiPassword = "enlighten-me";
-      this.deviceSettings.IsOfflineMode = true;
+    if (this.deviceConfig != null) {
+      this.deviceConfig.IsConfigured = false;
+      this.deviceConfig.ServerAddress = "http://localhost:3000";
+      this.deviceConfig.WiFiName = "Enlighted";
+      this.deviceConfig.WiFiPassword = "enlighten-me";
+      this.deviceConfig.IsOfflineMode = true;
       /*this.deviceSettings.FindSensors = false;
       this.deviceSettings.SensorID = "9999";
       this.deviceSettings.NumberOfLEDs = -1;
@@ -105,22 +114,40 @@ export class SettingsViewComponent implements OnInit {
       */
     }
 
-    this.ledcontrolService.applyDeviceSettings(this.deviceSettings!).subscribe(_ => {
-      this.ledcontrolService.getDeviceSettings().subscribe(res => this.deviceSettings = res);
+    this.ledcontrolService.applyDeviceSettings(this.deviceConfig!).subscribe(_ => {
+      this.ledcontrolService.getDeviceSettings().subscribe(res => this.deviceConfig = res);
     });
   }
 
-  newDevice(event: any) {
+  onAddressChanged(event: any) {
     let deviceAddress = event.target.value as string
     if (deviceAddress.length > 0) {
-      console.log("Add new device: " + event.target.value)
-      this.ledcontrolService.setIpAddress(deviceAddress)
+      console.log("onAddressChanged: Add new device: " + event.target.value)
+      this.ledcontrolService.setDevice({ Name: "Unknown", Address: deviceAddress })
       this.ledcontrolService.getDeviceSettings().subscribe({
         next: (res) => {
           if (res != null) {
             console.log("Succesful connected to " + res.SensorID)
-            this.settings!.address = event.target.value
-            this.onSave()
+            let newDevice: Device = { Name: res.SensorID, Address: event.target.value }
+            this.deviceConfig = res;
+            this.ledcontrolService.setDevice(newDevice)
+            let dev = this.findDevice(newDevice.Name)
+            if (dev == null) {
+              this.localStorage.readSettings().then(newSettings => {
+                newSettings.KnownDevices.push(newDevice)
+                newSettings.CurrentDevice = newDevice
+                this.connectedDevice = Object.assign({}, newDevice)
+                console.warn('add device: ' + JSON.stringify(newDevice))
+                this.localStorage.writeSettings(newSettings)
+                this.settings = newSettings
+              })
+            } else {
+              this.localStorage.readSettings().then(newSettings => {
+                newSettings.CurrentDevice = newDevice;
+                console.warn('changed device: ' + JSON.stringify(newDevice))
+                this.localStorage.writeSettings(newSettings)
+              })
+            }
           } else { // todo improve
             console.error('Failed to connect to : ' + deviceAddress)
           }
@@ -133,15 +160,18 @@ export class SettingsViewComponent implements OnInit {
     }
   }
 
-  compareWith(o1: string, o2: string) {
-    return o1 && o2 ? o1 === o2 : o1 === o2;
-  }
+
 
   handleChange(ev: any) {
-    this.settings!.address = ev.target.value;
-    this.onSave();
+    let device = this.findDevice(ev.target.value);
+    if (device == null) {
+      console.error("Device unknown: " + ev.target.value);
+    } else {
+      //this.connectedDevice = device
+      this.ledcontrolService.setDevice(this.connectedDevice)
+      this.clickedRefreshDevice();
+    }
   }
-
 
   public alertButtons = [
     {
@@ -160,5 +190,19 @@ export class SettingsViewComponent implements OnInit {
   setResult(ev: any) {
     console.warn("reset device" + JSON.stringify(ev));
   }
+
+  private findDevice(name: string) {
+
+    for (let i = 0; i < this.localStorage.settings!.KnownDevices.length; i++) {
+      if (this.localStorage.settings!.KnownDevices[i].Name == name) {
+        console.log("found device: " + JSON.stringify(this.localStorage.settings!))
+        return this.localStorage.settings!.KnownDevices[i]
+      }
+    }
+    console.warn("did not find device: " + JSON.stringify(name))
+    return null
+  }
+
+
 
 }

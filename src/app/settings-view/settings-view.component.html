@@ -9,15 +9,15 @@
     </ion-item>
     <ion-item>
       <ion-select
-        [compareWith]="compareWith"
+        [compareWith]="compareDevice"
         placeholder="Select Device"
-        [(ngModel)]="settings.address"
-        (ionChange)="onSave()"
+        [(ngModel)]="this.connectedDevice"
+        (ionChange)="onSelect()"
       >
         <ion-select-option
-          *ngFor="let address of settings.usedAddresses"
-          [value]="address"
-          >{{ address }}
+          *ngFor="let item of settings.KnownDevices"
+          [value]="item"
+          >{{ item.Name }} ({{ item.Address }})
         </ion-select-option>
       </ion-select>
     </ion-item>
@@ -28,7 +28,7 @@
         placeholder="New Device Address"
         text-right
         id="input"
-        (ionBlur)="newDevice($event)"
+        (ionBlur)="onAddressChanged($event)"
       ></ion-input>
     </ion-item>
     <ion-item lines="inset">
@@ -36,7 +36,7 @@
     </ion-item>
     <br />
 
-    <div *ngIf="deviceSettings">
+    <div *ngIf="deviceConfig">
       <ion-button id="present-alert" fill="outline">Reset WiFi</ion-button>
       <ion-alert
         trigger="present-alert"
@@ -52,7 +52,7 @@
           label=""
           type="text"
           ngDefaultControl
-          [(ngModel)]="deviceSettings.SensorID"
+          [(ngModel)]="deviceConfig.SensorID"
           text-right
           id="input"
         >
@@ -65,7 +65,7 @@
           type="text"
           label=""
           ngDefaultControl
-          [(ngModel)]="deviceSettings.ServerAddress"
+          [(ngModel)]="deviceConfig.ServerAddress"
           text-right
           id="input"
         >
@@ -78,7 +78,7 @@
           type="text"
           label=""
           ngDefaultControl
-          [(ngModel)]="deviceSettings.WiFiName"
+          [(ngModel)]="deviceConfig.WiFiName"
           text-right
           id="input"
         >
@@ -91,7 +91,7 @@
           type="password"
           label=""
           ngDefaultControl
-          [(ngModel)]="deviceSettings.WiFiPassword"
+          [(ngModel)]="deviceConfig.WiFiPassword"
           text-right
           id="input"
         >
@@ -99,16 +99,16 @@
       </ion-item>
       <ion-item>
         <ion-label>ShowWebpage</ion-label>
-        <input [(ngModel)]="deviceSettings.ShowWebpage" type="checkbox" />
+        <input [(ngModel)]="deviceConfig.ShowWebpage" type="checkbox" />
       </ion-item>
       <ion-item>
         <ion-label>IsConfigured</ion-label>
-        <input [(ngModel)]="deviceSettings.IsConfigured" type="checkbox" />
+        <input [(ngModel)]="deviceConfig.IsConfigured" type="checkbox" />
       </ion-item>
 
       <ion-item>
         <ion-label>IsOfflineMode</ion-label>
-        <input [(ngModel)]="deviceSettings.IsOfflineMode" type="checkbox" />
+        <input [(ngModel)]="deviceConfig.IsOfflineMode" type="checkbox" />
       </ion-item>
 
       <ion-item>
@@ -118,7 +118,7 @@
           type="number"
           label=""
           ngDefaultControl
-          [(ngModel)]="deviceSettings.Button1"
+          [(ngModel)]="deviceConfig.Button1"
           text-right
           id="input"
         >
@@ -131,20 +131,20 @@
           type="number"
           label=""
           ngDefaultControl
-          [(ngModel)]="deviceSettings.Button2"
+          [(ngModel)]="deviceConfig.Button2"
           text-right
           id="input"
         >
         </ion-input>
       </ion-item>
-      <ion-item *ngIf="deviceSettings.Button2 > 0">
+      <ion-item *ngIf="deviceConfig.Button2 > 0">
         <ion-label>Button2GetURL</ion-label>
         <ion-input
           slot="end"
           type="text"
           label=""
           ngDefaultControl
-          [(ngModel)]="deviceSettings.Button2GetURL"
+          [(ngModel)]="deviceConfig.Button2GetURL"
           text-right
           id="input"
         >
@@ -157,20 +157,20 @@
           type="number"
           label=""
           ngDefaultControl
-          [(ngModel)]="deviceSettings.NumberOfLEDs"
+          [(ngModel)]="deviceConfig.NumberOfLEDs"
           text-right
           id="input"
         >
         </ion-input>
       </ion-item>
-      <ion-item *ngIf="deviceSettings.NumberOfLEDs > 0">
+      <ion-item *ngIf="deviceConfig.NumberOfLEDs > 0">
         <ion-label>LEDPin</ion-label>
         <ion-input
           slot="end"
           type="number"
           label=""
           ngDefaultControl
-          [(ngModel)]="deviceSettings.LEDPin"
+          [(ngModel)]="deviceConfig.LEDPin"
           text-right
           id="input"
         >
@@ -178,16 +178,16 @@
       </ion-item>
       <ion-item>
         <ion-label>FindSensors</ion-label>
-        <input [(ngModel)]="deviceSettings.FindSensors" type="checkbox" />
+        <input [(ngModel)]="deviceConfig.FindSensors" type="checkbox" />
       </ion-item>
-      <ion-item *ngIf="deviceSettings.FindSensors">
+      <ion-item *ngIf="deviceConfig.FindSensors">
         <ion-label>DhtPin</ion-label>
         <ion-input
           slot="end"
           type="number"
           label=""
           ngDefaultControl
-          [(ngModel)]="deviceSettings.DhtPin"
+          [(ngModel)]="deviceConfig.DhtPin"
           text-right
           id="input"
         >
@@ -200,7 +200,7 @@
           type="number"
           label=""
           ngDefaultControl
-          [(ngModel)]="deviceSettings.WindSensorPin"
+          [(ngModel)]="deviceConfig.WindSensorPin"
           text-right
           id="input"
         >
@@ -213,36 +213,36 @@
           type="number"
           label=""
           ngDefaultControl
-          [(ngModel)]="deviceSettings.RainfallSensorPin"
+          [(ngModel)]="deviceConfig.RainfallSensorPin"
           text-right
           id="input"
         ></ion-input>
       </ion-item>
       <ion-item>
         <ion-label>UseMQTT</ion-label>
-        <input [(ngModel)]="deviceSettings.UseMQTT" type="checkbox" />
+        <input [(ngModel)]="deviceConfig.UseMQTT" type="checkbox" />
       </ion-item>
-      <ion-item *ngIf="deviceSettings.UseMQTT">
+      <ion-item *ngIf="deviceConfig.UseMQTT">
         <ion-label>MQTTPort</ion-label>
         <ion-input
           slot="end"
           type="number"
           label=""
           ngDefaultControl
-          [(ngModel)]="deviceSettings.MQTTPort"
+          [(ngModel)]="deviceConfig.MQTTPort"
           text-right
           id="input"
         >
         </ion-input>
       </ion-item>
-      <ion-item *ngIf="deviceSettings.UseMQTT">
+      <ion-item *ngIf="deviceConfig.UseMQTT">
         <ion-label>MQTTTopic</ion-label>
         <ion-input
           slot="end"
           type="text"
           label=""
           ngDefaultControl
-          [(ngModel)]="deviceSettings.MQTTTopic"
+          [(ngModel)]="deviceConfig.MQTTTopic"
           text-right
           id="input"
         >
@@ -252,7 +252,7 @@
         <ion-icon
           name="save"
           size="large"
-          (click)="clickedApplyDeviceSettings()"
+          (click)="clickedApplyDeviceConfig()"
         ></ion-icon>
       </div>
     </div>

@@ -37,10 +37,10 @@ export class SunriseComponent implements OnInit {
 
   async ngOnInit() {
     console.log("init view comp");
-    await this.localStorage.getSettings().then(
+    await this.localStorage.readSettings().then(
       res => {
         this.settings = res
-        this.ledcontrolService.setIpAddress(this.settings.address)
+        this.ledcontrolService.setDevice(this.settings.CurrentDevice)
         this.ledcontrolService.getDeviceSettings().subscribe(
           {
             next: (res) => {
