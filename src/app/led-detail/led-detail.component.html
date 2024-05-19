@@ -33,6 +33,33 @@
         <ion-label color="warning">Sunrise Alarm is active </ion-label>
       </ion-item>
     </div>
+    <div>
+      <ion-button [disabled]="!isReady" (click)="onPower()">
+        <ion-icon name="power" slot="icon-only" size="large"></ion-icon>
+      </ion-button>
+      <ion-button [disabled]="!isReady" (click)="onChangeColor()">
+        <ion-icon
+          name="repeat-outline"
+          slot="icon-only"
+          size="large"
+        ></ion-icon>
+      </ion-button>
+    </div>
+    <div *ngIf="deviceSettings && !deviceSettings.SunriseSettings.IsActivated">
+      <mat-form-field appearance="fill">
+        <mat-label>Mode</mat-label>
+        <mat-select
+          (selectionChange)="onSelectChange($event.value)"
+          [(ngModel)]="ledStatus.mode"
+          [compareWith]="compareFn"
+        >
+          <mat-option *ngFor="let mode of ledModes" [value]="mode">
+            {{ mode.id }} {{ mode.label }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+      <br />
+    </div>
 
     <div *ngIf="deviceSettings && deviceSettings.SunriseSettings">
       <ion-range
@@ -78,38 +105,37 @@
       >
         <ion-icon slot="end" name="sunny-outline"></ion-icon>
       </ion-range>
+      <div>
+        <ion-item>
+          <ion-label>Activate Level Config</ion-label>
+          <input [(ngModel)]="activeLevelConfiguration" type="checkbox" />
+        </ion-item>
+        <div *ngIf="activeLevelConfiguration">
+          <mat-form-field appearance="fill">
+            <mat-label>Light Level</mat-label>
+            <mat-select
+              [(ngModel)]="selectedLevel"
+              (selectionChange)="onSelectLevel($event.value)"
+              [compareWith]="compareLevelFn"
+            >
+              <mat-option *ngFor="let level of lightLevels" [value]="level">
+                {{ level.id }} {{ level.label }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
 
-      <div *ngIf="!deviceSettings.SunriseSettings.IsActivated">
-        <mat-form-field appearance="fill">
-          <mat-label>Mode</mat-label>
-          <mat-select
-            (selectionChange)="onSelectChange($event.value)"
-            [(ngModel)]="ledStatus.mode"
-            [compareWith]="compareFn"
-          >
-            <mat-option *ngFor="let mode of ledModes" [value]="mode">
-              {{ mode.id }} {{ mode.label }}
-            </mat-option>
-          </mat-select>
-        </mat-form-field>
         <br />
       </div>
-    </div>
-    <hr />
-    <div>
-      <ion-button [disabled]="!isReady" (click)="onPower()">
-        <ion-icon name="power" slot="icon-only" size="large"></ion-icon>
-      </ion-button>
-    </div>
-    <hr />
-    <div>
-      <ion-button [disabled]="!isReady" (click)="onChangeColor()">
-        <ion-icon
-          name="repeat-outline"
-          slot="icon-only"
-          size="large"
-        ></ion-icon>
-      </ion-button>
+
+      <div *ngIf="activeLevelConfiguration">
+        <ion-button
+          [disabled]="!isReady && enableSaveButton"
+          (click)="onSaveColor()"
+        >
+          <ion-icon name="save" slot="icon-only" size="large"></ion-icon>
+        </ion-button>
+      </div>
     </div>
     <hr />
     <ion-item>

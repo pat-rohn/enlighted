@@ -38,3 +38,18 @@ export const LED_COLORS: LabeledLedMode = { label: "colorful", id: LEDMode.color
 export const LED_SUNRISE: LabeledLedMode = { label: "sunrise", id: LEDMode.sunrise };
 export const LED_PULSE: LabeledLedMode = { label: "pulse", id: LEDMode.pulse };
 
+export enum Level {
+  First = 0,
+  Second = 1,
+  Third = 2,
+}
+
+export interface LightLevel {
+  label: string;
+  id: Level
+}
+
+export const LIGHT_FIRST: LightLevel = { label: "first", id: Level.First };
+export const LIGHT_SECOND: LightLevel = { label: "second", id: Level.Second };
+export const LIGHT_THIRD: LightLevel = { label: "third", id: Level.Third };
+

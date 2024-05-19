@@ -2,8 +2,12 @@ import { Component, OnInit } from '@angular/core';
 
 import { ActivatedRoute } from '@angular/router'
 import { LedcontrolService } from '../services/ledcontrol.service';
-import { LEDStatus, LEDStatusJSON, LabeledLedMode, LED_ON, LED_OFF, LED_PULSE, LED_CAMPFIRE, LED_COLORS, LED_SUNRISE, LEDMode } from '../ledstatus';
-import { Settings, DeviceSettings } from '../settings'
+import {
+  LEDStatus, LEDStatusJSON, LabeledLedMode, LED_ON, LED_OFF, LED_PULSE,
+  LED_CAMPFIRE, LED_COLORS, LED_SUNRISE, LEDMode,
+  LightLevel, Level, LIGHT_FIRST, LIGHT_SECOND, LIGHT_THIRD
+} from '../ledstatus';
+import { Settings, DeviceSettings } from '../settings';
 import { LocalstorageService } from '../services/localstorage.service';
 
 @Component({
@@ -13,8 +17,10 @@ import { LocalstorageService } from '../services/localstorage.service';
 })
 export class LedDetailComponent implements OnInit {
   ledStatusJson?: LEDStatusJSON;
-
+  enableSaveButton: boolean = false
+  selectedLevel: LightLevel = LIGHT_FIRST;
   isReady = true;
+  activeLevelConfiguration = false;
 
   ledStatus: LEDStatus = {
     red: 0,
@@ -36,15 +42,21 @@ export class LedDetailComponent implements OnInit {
     LED_PULSE,
   ];
 
+  lightLevels: LightLevel[] = [
+    LIGHT_FIRST,
+    LIGHT_SECOND,
+    LIGHT_THIRD,
+  ];
+
   constructor(private ledcontrolService: LedcontrolService,
     private localStorage: LocalstorageService,
     private activeRoute: ActivatedRoute) {
     this.activeRoute.params.subscribe(params => {
       console.log(JSON.stringify(params));
       //if (params["id"] == "LedDetails") {
-        if (this.deviceSettings != null) {
-          this.onRefresh();
-        }
+      if (this.deviceSettings != null) {
+        this.onRefresh();
+      }
       //}
     });
   }
@@ -54,6 +66,7 @@ export class LedDetailComponent implements OnInit {
     this.settings = await this.localStorage.readSettings();
     this.ledcontrolService.setDevice(this.settings.CurrentDevice);
     this.ledcontrolService.getDeviceSettings().subscribe(res => {
+      this.enableSaveButton = true
       this.deviceSettings = res
       this.ledcontrolService.getLedStatus().subscribe(
         {
@@ -82,6 +95,25 @@ export class LedDetailComponent implements OnInit {
 
   onSliderChange(ev: Event) {
     this.onSave();
+    if (this.activeLevelConfiguration) {
+      switch (this.selectedLevel.id) {
+        case Level.First:
+          this.deviceSettings!.LightLow.Red = this.ledStatus.red
+          this.deviceSettings!.LightLow.Green = this.ledStatus.green
+          this.deviceSettings!.LightLow.Blue = this.ledStatus.blue
+          break;
+        case Level.Second:
+          this.deviceSettings!.LightMedium.Red = this.ledStatus.red
+          this.deviceSettings!.LightMedium.Green = this.ledStatus.green
+          this.deviceSettings!.LightMedium.Blue = this.ledStatus.blue
+          break;
+        case Level.Third:
+          this.deviceSettings!.LightHigh.Red = this.ledStatus.red
+          this.deviceSettings!.LightHigh.Green = this.ledStatus.green
+          this.deviceSettings!.LightHigh.Blue = this.ledStatus.blue
+          break;
+      }
+    }
   }
 
 
@@ -114,6 +146,67 @@ export class LedDetailComponent implements OnInit {
           },
         });
     }
+  }
+
+  onSelectLevel(value: LightLevel): void {
+    if (this.deviceSettings == null) {
+      return
+    }
+    switch (value.id) {
+      case Level.First:
+        this.ledStatus.red = this.deviceSettings!.LightLow.Red
+        this.ledStatus.green = this.deviceSettings!.LightLow.Green
+        this.ledStatus.blue = this.deviceSettings!.LightLow.Blue
+        break;
+      case Level.Second:
+        this.ledStatus.red = this.deviceSettings!.LightMedium.Red
+        this.ledStatus.green = this.deviceSettings!.LightMedium.Green
+        this.ledStatus.blue = this.deviceSettings!.LightMedium.Blue
+        break;
+      case Level.Third:
+        this.ledStatus.red = this.deviceSettings!.LightHigh.Red
+        this.ledStatus.green = this.deviceSettings!.LightHigh.Green
+        this.ledStatus.blue = this.deviceSettings!.LightHigh.Blue
+        break;
+    }
+    this.applyLEDStatus(this.getJson())
+    this.onSave()
+  }
+
+  onSaveColor(): void {
+    switch (this.selectedLevel.id) {
+      case Level.First:
+        this.deviceSettings!.LightLow.Red = this.ledStatus.red
+        this.deviceSettings!.LightLow.Green = this.ledStatus.green
+        this.deviceSettings!.LightLow.Blue = this.ledStatus.blue
+        break;
+      case Level.Second:
+        this.deviceSettings!.LightMedium.Red = this.ledStatus.red
+        this.deviceSettings!.LightMedium.Green = this.ledStatus.green
+        this.deviceSettings!.LightMedium.Blue = this.ledStatus.blue
+        break;
+      case Level.Third:
+        this.deviceSettings!.LightHigh.Red = this.ledStatus.red
+        this.deviceSettings!.LightHigh.Green = this.ledStatus.green
+        this.deviceSettings!.LightHigh.Blue = this.ledStatus.blue
+        break;
+    }
+    this.enableSaveButton = false
+    this.ledcontrolService.saveDeviceSettings(this.deviceSettings!).subscribe({
+      next: (res) => {
+        if (res != null) {
+          this.enableSaveButton = true
+        }
+      },
+      error: (error) => {
+        console.error('Failed to connect to : ' + this.settings?.CurrentDevice.Name + ' ' + error)
+        throw error
+      }
+    });
+  }
+
+  compareLevelFn(e1: LightLevel, e2: LightLevel): boolean {
+    return e1 && e2 ? e1.id === e2.id : e1 === e2;
   }
 
   onSave(): void {
