@@ -44,6 +44,8 @@ export interface DeviceSettings {
   WiFiName: string;
   WiFiPassword: string;
   DhtPin: number;
+  SerialRX: number;
+  SerialTX: number;
   WindSensorPin: number;
   RainfallSensorPin: number;
   LEDPin: number;

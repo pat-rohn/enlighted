@@ -193,6 +193,32 @@
         >
         </ion-input>
       </ion-item>
+      <ion-item *ngIf="deviceConfig.FindSensors">
+        <ion-label>SerialRX</ion-label>
+        <ion-input
+          slot="end"
+          type="number"
+          label=""
+          ngDefaultControl
+          [(ngModel)]="deviceConfig.SerialRX"
+          text-right
+          id="input"
+        >
+        </ion-input>
+      </ion-item>
+      <ion-item *ngIf="deviceConfig.FindSensors">
+        <ion-label>SerialTX</ion-label>
+        <ion-input
+          slot="end"
+          type="number"
+          label=""
+          ngDefaultControl
+          [(ngModel)]="deviceConfig.SerialTX"
+          text-right
+          id="input"
+        >
+        </ion-input>
+      </ion-item>
       <ion-item>
         <ion-label>WindSensorPin</ion-label>
         <ion-input
