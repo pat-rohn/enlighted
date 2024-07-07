@@ -62,14 +62,17 @@ export class LedcontrolService {
     );
   }
 
-  getDeviceSettings(): Observable<DeviceSettings> {
+  getDeviceSettings(device?: Device): Observable<DeviceSettings> {
     let url = "http://" + this.currentDevice?.Address + "/api/config"
+    if (device != null){
+      url = "http://" + device.Address + "/api/config"
+    }
     console.log('get device settings from:' + url);
     if (this.useDummy) {
       url = "assets/device-settings.json";
     }
     return this.http.get<DeviceSettings>(url).pipe(
-      timeout(1000),
+      timeout(2000),
       tap(_ => console.log('fetched device settings')),
       catchError(this.handleError<DeviceSettings>('Get Device Settings'))
     );

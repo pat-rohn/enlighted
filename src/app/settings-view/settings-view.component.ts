@@ -140,9 +140,12 @@ export class SettingsViewComponent implements OnInit {
             let newDevice: Device = { Name: res.SensorID, Address: event.target.value }
             this.deviceConfig = res;
             this.ledcontrolService.setDevice(newDevice)
-            let dev = this.findDevice(newDevice.Name)
-            if (dev == null) {
+            let foundDevice = this.findDevice(newDevice.Name)
+            if (foundDevice == null) {
               this.localStorage.readSettings().then(newSettings => {
+                // remove other device with same name
+                newSettings.KnownDevices = this.removeDevice(newSettings.KnownDevices, newDevice.Name)
+                 
                 newSettings.KnownDevices.push(newDevice)
                 newSettings.CurrentDevice = newDevice
                 this.connectedDevice = Object.assign({}, newDevice)
@@ -151,10 +154,25 @@ export class SettingsViewComponent implements OnInit {
                 this.settings = newSettings
               })
             } else {
+
               this.localStorage.readSettings().then(newSettings => {
+
+                // remove other device with same IP address
+                newSettings.KnownDevices.forEach(oldDevice => {
+                  if (newDevice.Address === oldDevice.Address) {
+                    newSettings.KnownDevices = this.removeDevice(newSettings.KnownDevices, oldDevice.Name)
+                  }
+                })
+                const index = newSettings.KnownDevices.indexOf(newDevice, 0);
+                if (index <= -1) {
+                  newSettings.KnownDevices.push(newDevice)
+                  console.warn("Added changed device: " + newDevice.Name + "/" + newDevice.Address)
+                }
+
                 newSettings.CurrentDevice = newDevice;
                 console.warn('changed device: ' + JSON.stringify(newDevice))
                 this.localStorage.writeSettings(newSettings)
+                this.settings = newSettings
               })
             }
           } else { // todo improve
@@ -169,7 +187,18 @@ export class SettingsViewComponent implements OnInit {
     }
   }
 
-
+  removeDevice(oldDevices: Device[], name: String) {
+    let newKnownDevices: Device[] = []
+    oldDevices.forEach(oldDevice => {
+      console.log(oldDevice)
+      if (oldDevice.Name !== name) {
+        newKnownDevices.push(oldDevice)
+      } else {
+        console.warn('Removed device: ' + name)
+      }
+    })
+    return newKnownDevices
+  }
 
   handleChange(ev: any) {
     let device = this.findDevice(ev.target.value);
