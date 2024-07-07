@@ -88,19 +88,26 @@ export class LedcontrolService {
       catchError(this.handleError<string>('Get Device Settings')));
   }
 
-  // triggers restart of controller
   applyDeviceSettings(deviceSettings: DeviceSettings): Observable<any> {
     let url = "http://" + this.currentDevice?.Address + "/api/config"
     console.log('set device settings to :' + url);
     console.log(`Apply: ` + JSON.stringify(deviceSettings))
-    return this.http.post(url, deviceSettings, this.httpOptions).pipe(
+    return this.http.put(url, deviceSettings, this.httpOptions).pipe(
       catchError(this.handleError<any>('Apply Device Settings'))
+    );
+  }
+
+  restartDevice(): Observable<any> {
+    let url = "http://" + this.currentDevice?.Address + "/restart"
+    console.log('restart:' + url);
+    return this.http.get(url, this.httpOptions).pipe(
+      catchError(this.handleError<any>('Restart'))
     );
   }
 
   // no restart of controller
   saveDeviceSettings(deviceSettings: DeviceSettings): Observable<any> {
-    let url = "http://" + this.currentDevice?.Address + "/api/config" 
+    let url = "http://" + this.currentDevice?.Address + "/api/config"
     console.log('set device settings to :' + url);
     console.log(`Apply: ` + JSON.stringify(deviceSettings))
     return this.http.put(url, deviceSettings, this.httpOptions).pipe(

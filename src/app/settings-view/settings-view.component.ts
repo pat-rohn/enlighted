@@ -91,6 +91,15 @@ export class SettingsViewComponent implements OnInit {
     });
   }
 
+  async clickedRestart() {
+    console.log("Restart")
+    this.enableSave = false;
+    console.log(JSON.stringify(this.deviceConfig))
+    this.ledcontrolService.restartDevice().subscribe(_ => {
+      this.ledcontrolService.getDeviceSettings().subscribe(res => this.deviceConfig = res);
+    });
+  }
+
   async resetWiFi() {
     if (this.deviceConfig != null) {
       this.deviceConfig.IsConfigured = false;
