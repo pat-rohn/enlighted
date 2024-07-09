@@ -249,6 +249,50 @@ export class LedDetailComponent implements OnInit {
     }
   }
 
+  onButton1(): void {
+    this.isReady = false
+    this.ledcontrolService.pressButton("1").subscribe(res =>{
+      this.enableSaveButton = true
+      this.ledcontrolService.getLedStatus().subscribe(
+        {
+          next: (ledJson) => {
+            console.log('Answer:' + JSON.stringify(ledJson));
+            this.applyLEDStatus(ledJson);
+            this.isReady = true
+          },
+          error: (error) => {
+            console.error('Observer got an error: ' + error)
+            this.isReady = false;
+          },
+          complete: () => {
+          }
+        }
+      )
+    })
+  }
+
+  onButton2(): void {
+    this.isReady = false
+    this.ledcontrolService.pressButton("2").subscribe(res =>{
+      this.enableSaveButton = true
+      this.ledcontrolService.getLedStatus().subscribe(
+        {
+          next: (ledJson) => {
+            console.log('Answer:' + JSON.stringify(ledJson));
+            this.applyLEDStatus(ledJson);
+            this.isReady = true
+          },
+          error: (error) => {
+            console.error('Observer got an error: ' + error)
+            this.isReady = false;
+          },
+          complete: () => {
+          }
+        }
+      )
+    })
+  }
+
   handleRefresh(event: any) {
     this.onRefresh().then(_ => {
       console.log("handle Refresher complete")

@@ -62,9 +62,24 @@ export class LedcontrolService {
     );
   }
 
+  pressButton(nr: String): Observable<any> {
+    let url = "http://" + this.currentDevice?.Address + "/api/button" + nr
+    console.log('Button:' + nr + 'pressed');
+
+    return this.http.get<any>(url, {
+      headers: new HttpHeaders({
+        'Content-Type': 'application/json '
+      })
+    }).pipe(
+      tap(_ => console.log(`updated led `)),
+      catchError(this.handleError<any>('pressButton' + nr))
+    );
+  }
+
+
   getDeviceSettings(device?: Device): Observable<DeviceSettings> {
     let url = "http://" + this.currentDevice?.Address + "/api/config"
-    if (device != null){
+    if (device != null) {
       url = "http://" + device.Address + "/api/config"
     }
     console.log('get device settings from:' + url);
